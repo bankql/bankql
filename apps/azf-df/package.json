@@ -1,0 +1,25 @@
+{
+  "name": "@bankql/azf-df",
+  "private": true,
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "npm run build && azurite --silent & func start",
+    "watch": "tsc --watch",
+    "azurite": "azurite --silent",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bankql/schema": "*",
+    "@azure/functions": "^4.7.0",
+    "durable-functions": "^3.3.0"
+  },
+  "devDependencies": {
+    "azurite": "^3.34.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
