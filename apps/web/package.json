@@ -1,0 +1,25 @@
+{
+  "name": "@bankql/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run codegen:watch & vinxi dev",
+    "codegen": "tsr generate",
+    "codegen:watch": "tsr watch",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.114.3",
+    "@tanstack/start": "^1.114.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vinxi": "^0.5.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.2"
+  }
+}

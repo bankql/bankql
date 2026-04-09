@@ -1,0 +1,8 @@
+node_modules
+.output
+.vinxi
+dist
+.turbo
+*.local
+.DS_Store
+package-lock.json
