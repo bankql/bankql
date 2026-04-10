@@ -43,3 +43,5 @@ export type { TileConfig, StatConfig, ChartConfig, TableConfig } from "./tiles.j
 
 export { TileTemplateSchema } from "./tile-templates.js";
 export type { TileTemplate } from "./tile-templates.js";
+
+export { toDuckDBCreateTable } from "./duckdb.js";

@@ -1,0 +1,31 @@
+{
+  "name": "@bankql/etl",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pipeline": "tsx src/pipeline.ts",
+    "upload": "tsx src/upload.ts",
+    "fetch:institutions": "tsx src/scripts/fetch-fdic-institutions.ts",
+    "fetch:locations": "tsx src/scripts/fetch-fdic-locations.ts",
+    "fetch:events": "tsx src/scripts/fetch-fdic-events.ts",
+    "fetch:sod": "tsx src/scripts/fetch-fdic-sod.ts",
+    "fetch:nic-attributes": "tsx src/scripts/fetch-nic-attributes.ts",
+    "fetch:nic-relationships": "tsx src/scripts/fetch-nic-relationships.ts",
+    "fetch:nic-transformations": "tsx src/scripts/fetch-nic-transformations.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bankql/schema": "*",
+    "@azure/identity": "^4.5.0",
+    "@azure/storage-blob": "^12.26.0",
+    "adm-zip": "^0.5.16",
+    "duckdb-async": "^1.1.3"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.2"
+  }
+}
