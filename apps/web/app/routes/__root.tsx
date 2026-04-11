@@ -4,6 +4,11 @@ import {
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { DuckDBProvider } from "~/lib/duckdb";
+
+const queryClient = new QueryClient();
 
 export const Route = createRootRoute({
   head: () => ({
@@ -23,7 +28,13 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body>
-        <Outlet />
+        <ChakraProvider value={defaultSystem}>
+          <QueryClientProvider client={queryClient}>
+            <DuckDBProvider>
+              <Outlet />
+            </DuckDBProvider>
+          </QueryClientProvider>
+        </ChakraProvider>
         <Scripts />
       </body>
     </html>
