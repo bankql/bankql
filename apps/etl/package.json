@@ -15,6 +15,9 @@
     "fetch:nic-transformations": "tsx src/scripts/fetch-nic-transformations.ts",
     "typecheck": "tsc --noEmit"
   },
+  "engines": {
+    "node": ">=24"
+  },
   "dependencies": {
     "@bankql/schema": "*",
     "@azure/identity": "^4.5.0",

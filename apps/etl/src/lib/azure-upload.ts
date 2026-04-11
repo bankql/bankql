@@ -5,13 +5,16 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { config } from "./config.js";
 import type { DatasetDef } from "@bankql/schema";
 
-function blobPrefix(dataset: DatasetDef): string {
+function datasetRoot(dataset: DatasetDef): string {
   return (dataset as DatasetDef & { blobPath?: string }).blobPath
-    ?? `datasets/${dataset.name}/latest`;
+    ?? `datasets/${dataset.name}`;
 }
 
 /**
- * Upload all Parquet and Arrow files for each dataset to Azure Blob Storage.
+ * Upload all Parquet files for each dataset to Azure Blob Storage.
+ * Each run writes to two paths:
+ *   datasets/{name}/YYYY-MM-DD/{name}.parquet  ← dated archive
+ *   datasets/{name}/latest/{name}.parquet       ← always current
  */
 export async function uploadDatasetBlobs(datasets: DatasetDef[]): Promise<void> {
   const credential = new DefaultAzureCredential();
@@ -19,24 +22,25 @@ export async function uploadDatasetBlobs(datasets: DatasetDef[]): Promise<void> 
   const client = new BlobServiceClient(serviceUrl, credential);
   const container = client.getContainerClient(config.azure.containerName);
 
+  const datestamp = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
   for (const dataset of datasets) {
-    const prefix = blobPrefix(dataset);
+    const root = datasetRoot(dataset);
+    const localPath = path.join(config.outputDir, `${dataset.name}.parquet`);
+    const data = await fs.readFile(localPath);
 
-    for (const ext of ["parquet"] as const) {
-      const localPath = path.join(config.outputDir, `${dataset.name}.${ext}`);
-      const blobName = `${prefix}/${dataset.name}.${ext}`;
+    const targets = [
+      `${root}/${datestamp}/${dataset.name}.parquet`,
+      `${root}/latest/${dataset.name}.parquet`,
+    ];
 
-      console.log(`[upload] ${localPath} → ${blobName}`);
-
-      const data = await fs.readFile(localPath);
+    for (const blobName of targets) {
+      console.log(`[upload] ${dataset.name} → ${blobName}`);
       const blockBlob = container.getBlockBlobClient(blobName);
       await blockBlob.upload(data, data.byteLength, {
-        blobHTTPHeaders: {
-          blobContentType:
-            ext === "parquet" ? "application/octet-stream" : "application/octet-stream",
-        },
+        blobHTTPHeaders: { blobContentType: "application/octet-stream" },
+        metadata: { uploaded_at: new Date().toISOString() },
       });
-
       console.log(`[upload] OK ${blobName} (${data.byteLength} bytes)`);
     }
   }

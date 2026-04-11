@@ -1,5 +1,8 @@
 import path from "node:path";
 
+// Load .env from the package root if present (Node 20.12+ built-in)
+try { process.loadEnvFile(new URL("../../.env", import.meta.url)); } catch { /* no .env, that's fine */ }
+
 export const config = {
   tmpDir: process.env.ETL_TMP_DIR ?? "/tmp/etl",
   get rawDir() {

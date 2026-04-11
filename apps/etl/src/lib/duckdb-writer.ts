@@ -49,7 +49,10 @@ export async function csvToParquet(
   const conn = await db.connect();
 
   try {
-    const ddl = toDuckDBCreateTable(dataset, { ifNotExists: true });
+    // Strip PRIMARY KEY for staging — we're a transform engine, not enforcing integrity.
+    // FDIC source data can contain duplicate keys (e.g. events/history).
+    const ddl = toDuckDBCreateTable(dataset, { ifNotExists: true })
+      .replace(/,\s*PRIMARY KEY \([^)]+\)/, "");
     await conn.run(ddl);
 
     console.log(`[duckdb] Loading CSV → ${dataset.name}...`);
