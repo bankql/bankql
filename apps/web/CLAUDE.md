@@ -47,6 +47,19 @@ Providers are layered in `__root.tsx` in this order (outermost first):
 
 File-based routing via TanStack Router. Add a file under `app/routes/` and run `npm run codegen` (or leave `npm run dev` running — it watches automatically). Route files must export a `Route` const created with `createFileRoute`.
 
+## UI Guidelines
+
+- Use **Chakra UI v3** for all UI. Prefer Chakra's compound component APIs (e.g. `<Menu.Root>`, `<Menu.Item>`) over the CLI-generated snippets.
+- Keep in-component styling to a minimum — rely on Chakra's defaults. If you're passing more than a couple style props, that's a signal to step back and use a simpler composition.
+- Use the base component with explicit props instead of shortcut variants:
+  - `<Stack direction="row">` not `<HStack>`
+  - `<Stack direction="column">` not `<VStack>`
+  - This applies to all components that have similar directional or variant shortcuts.
+- Prefer readability over conciseness. Spell things out — longer, clearer JSX is better than clever one-liners.
+- Use `export default function ComponentName()` not arrow functions for component exports. Named function declarations are easier to identify in stack traces and React DevTools.
+- Structure files to optimize for code splitting — one component per file, use lazy imports for heavy or route-specific code, and keep shared imports light so the bundler can split effectively.
+- **Before implementing a UI component**, use the Chakra UI MCP to inventory available components that could solve the problem, then present at least 2 component approaches to the user for selection. For example, navigation could use `<Tabs>`, `<Menu>`, `<SegmentGroup>`, a `<Stack>` of `<Button>`s, etc. This is especially important during planning.
+
 ## Key Dependencies
 
 | Package | Purpose |
