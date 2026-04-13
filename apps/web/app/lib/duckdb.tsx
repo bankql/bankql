@@ -1,19 +1,30 @@
 import * as duckdb from "@duckdb/duckdb-wasm";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  type DatasetName,
+  type DatasetState,
+  type SyncState,
+  initialSyncState,
+  syncAllDatasets,
+} from "~/lib/parquet-sync";
 
 interface DuckDBState {
   db: duckdb.AsyncDuckDB | null;
   conn: duckdb.AsyncDuckDBConnection | null;
   loading: boolean;
   error: Error | null;
+  datasets: SyncState;
 }
 
-const DuckDBContext = createContext<DuckDBState>({
+const INITIAL_STATE: DuckDBState = {
   db: null,
   conn: null,
   loading: true,
   error: null,
-});
+  datasets: initialSyncState(),
+};
+
+const DuckDBContext = createContext<DuckDBState>(INITIAL_STATE);
 
 async function initDuckDB(): Promise<{
   db: duckdb.AsyncDuckDB;
@@ -33,26 +44,43 @@ async function initDuckDB(): Promise<{
 }
 
 export function DuckDBProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<DuckDBState>({
-    db: null,
-    conn: null,
-    loading: true,
-    error: null,
-  });
+  const [state, setState] = useState<DuckDBState>(INITIAL_STATE);
+  const instanceRef = useRef<{ db: duckdb.AsyncDuckDB; conn: duckdb.AsyncDuckDBConnection } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     initDuckDB()
       .then(({ db, conn }) => {
-        if (!cancelled) setState({ db, conn, loading: false, error: null });
+        if (cancelled) {
+          conn.close();
+          db.terminate();
+          return;
+        }
+
+        instanceRef.current = { db, conn };
+        setState((s) => ({ ...s, db, conn, loading: false }));
+
+        syncAllDatasets(db, duckdb.DuckDBDataProtocol, (name: DatasetName, datasetState: DatasetState) => {
+          if (!cancelled) {
+            setState((s) => ({
+              ...s,
+              datasets: { ...s.datasets, [name]: datasetState },
+            }));
+          }
+        });
       })
       .catch((error) => {
-        if (!cancelled) setState({ db: null, conn: null, loading: false, error });
+        if (!cancelled) setState({ ...INITIAL_STATE, loading: false, error });
       });
 
     return () => {
       cancelled = true;
+      if (instanceRef.current) {
+        instanceRef.current.conn.close();
+        instanceRef.current.db.terminate();
+        instanceRef.current = null;
+      }
     };
   }, []);
 

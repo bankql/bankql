@@ -3,26 +3,25 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run codegen:watch & vinxi dev",
-    "codegen": "tsr generate",
-    "codegen:watch": "tsr watch",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "vite preview",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@bankql/schema": "*",
     "@chakra-ui/react": "^3.34.0",
     "@duckdb/duckdb-wasm": "^1.33.1-dev42.0",
+    "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@tanstack/ai": "^0.10.1",
     "@tanstack/ai-react": "^0.7.9",
     "@tanstack/react-query": "^5.99.0",
-    "@tanstack/react-router": "^1.114.3",
+    "@tanstack/react-router": "^1.168.18",
+    "@tanstack/react-start": "^1.167.31",
     "@tanstack/react-table": "^8.21.3",
-    "@tanstack/start": "^1.114.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "vinxi": "^0.5.3"
+    "vite": "^7.1.12"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
