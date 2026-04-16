@@ -1,13 +1,30 @@
 import { Flex, IconButton, Input, Spacer, Splitter, Stack } from "@chakra-ui/react";
 import { Outlet } from "@tanstack/react-router";
 import { LuMenu, LuMessageSquare } from "react-icons/lu";
+import { LayoutProvider, useLayout } from "~/domains/layout/hooks/useLayout";
+import Sidebar from "~/domains/menu/ui/Sidebar";
 
 export default function Layout() {
+  return (
+    <LayoutProvider>
+      <LayoutShell />
+    </LayoutProvider>
+  );
+}
+
+function LayoutShell() {
+  const { sidebarOpen, onSidebarToggle } = useLayout();
+
   return (
     <Stack direction="column" w="100dvw" h="100dvh" gap="0">
       {/* Toolbar */}
       <Flex direction="row" align="center" px="2" py="1" gap="2" flexShrink="0" borderBottomWidth="1px">
-        <IconButton aria-label="Open menu" variant="ghost" size="sm">
+        <IconButton
+          aria-label="Toggle menu"
+          variant="ghost"
+          size="sm"
+          onClick={onSidebarToggle}
+        >
           <LuMenu />
         </IconButton>
 
@@ -24,6 +41,8 @@ export default function Layout() {
 
       {/* Main content */}
       <Flex direction="row" flex="1" minH="0">
+        <Sidebar collapsed={!sidebarOpen} onToggle={onSidebarToggle} />
+
         <Splitter.Root
           flex="1"
           defaultSize={[80, 20]}
