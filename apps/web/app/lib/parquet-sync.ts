@@ -77,6 +77,14 @@ export async function syncDataset(
   onStatus({ status: "registering" });
   try {
     await db.registerFileHandle(file, fileHandle, protocol.BROWSER_FSACCESS, true);
+    const conn = await db.connect();
+    try {
+      const result = await conn.query(`SELECT count(*)::INTEGER as cnt FROM '${file}'`);
+      const count = result.get(0)?.toJSON().cnt;
+      console.log(`[parquet-sync] ${name}: ${count?.toLocaleString()} rows`);
+    } finally {
+      await conn.close();
+    }
     onStatus({ status: "ready" });
   } catch (error) {
     onStatus({ status: "error", error: error as Error });
