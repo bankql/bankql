@@ -1,7 +1,6 @@
 import {
   createRootRoute,
   HeadContent,
-  Outlet,
   Scripts,
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { useState } from "react";
 import { DuckDBProvider } from "~/lib/duckdb";
 import Toaster from "~/domains/notifications/ui/toaster";
+import Layout from "~/domains/layout/ui/Layout";
 
 // Cached per page load — root loader runs on every navigation so we memoize
 let visitorIdPromise: Promise<string | null> | null = null;
@@ -56,7 +56,7 @@ function RootComponent() {
         <ChakraProvider value={defaultSystem}>
           <QueryClientProvider client={queryClient}>
             <DuckDBProvider>
-              <Outlet />
+              <Layout />
             </DuckDBProvider>
           </QueryClientProvider>
           <Toaster />
