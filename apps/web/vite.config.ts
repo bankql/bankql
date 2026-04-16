@@ -2,6 +2,15 @@ import path from "node:path";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { defineConfig } from "vite";
 
+// Nitro server options — not yet typed by @tanstack/react-start
+const serverConfig: Record<string, unknown> = {
+  preset: "static",
+  prerender: {
+    routes: ["/"],
+    crawlLinks: false,
+  },
+};
+
 export default defineConfig({
   resolve: {
     alias: {
@@ -11,13 +20,7 @@ export default defineConfig({
   plugins: [
     tanstackStart({
       srcDirectory: "app",
-      server: {
-        preset: "static",
-        prerender: {
-          routes: ["/"],
-          crawlLinks: false,
-        },
-      },
+      server: serverConfig,
     }),
   ],
   optimizeDeps: {
