@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "npm run build && azurite --silent & func start --port 7072",
+    "dev": "npm run build && func start --port 7072",
     "watch": "tsc --watch",
     "typecheck": "tsc --noEmit"
   },
@@ -19,7 +19,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "azurite": "^3.34.0",
     "typescript": "^5.7.2"
   },
   "engines": {

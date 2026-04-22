@@ -5,9 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "npm run build && azurite --silent & func start",
+    "dev": "npm run build && func start",
     "watch": "tsc --watch",
-    "azurite": "azurite --silent",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -16,7 +15,6 @@
     "durable-functions": "^3.3.0"
   },
   "devDependencies": {
-    "azurite": "^3.34.0",
     "typescript": "^5.7.2"
   },
   "engines": {

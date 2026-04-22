@@ -13,3 +13,4 @@ __blobstorage__
 __queuestorage__
 __tablesstorage__
 AzuriteConfig
+.azurite

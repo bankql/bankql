@@ -10,9 +10,11 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "azurite": "mkdir -p .azurite && azurite --silent --location .azurite"
   },
   "devDependencies": {
+    "azurite": "^3.34.0",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2"
   },

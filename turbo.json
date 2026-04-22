@@ -5,9 +5,14 @@
       "dependsOn": ["^build"],
       "outputs": [".output/**", "dist/**"]
     },
-    "dev": {
+    "//#azurite": {
       "cache": false,
       "persistent": true
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "with": ["//#azurite"]
     },
     "lint": {
       "dependsOn": ["^lint"]
