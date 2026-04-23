@@ -9,7 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useRef, useState } from "react";
 import { LuSend } from "react-icons/lu";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useAgent } from "~/domains/agent/hooks/useAgent";
+import { Prose } from "~/lib/prose";
 import type {
   MessagePart,
   UIMessage,
@@ -76,20 +79,27 @@ function MessageView({ message }: { message: UIMessage }) {
     >
       <Stack direction="column" gap="2">
         {message.parts.map((part, i) => (
-          <PartView key={i} part={part} />
+          <PartView key={i} part={part} isUser={isUser} />
         ))}
       </Stack>
     </Box>
   );
 }
 
-function PartView({ part }: { part: MessagePart }) {
+function PartView({ part, isUser }: { part: MessagePart; isUser: boolean }) {
   switch (part.type) {
     case "text":
+      if (isUser) {
+        return (
+          <Text textStyle="sm" whiteSpace="pre-wrap">
+            {part.content}
+          </Text>
+        );
+      }
       return (
-        <Text textStyle="sm" whiteSpace="pre-wrap">
-          {part.content}
-        </Text>
+        <Prose maxWidth="full">
+          <Markdown remarkPlugins={[remarkGfm]}>{part.content}</Markdown>
+        </Prose>
       );
     case "tool-call":
       return (
