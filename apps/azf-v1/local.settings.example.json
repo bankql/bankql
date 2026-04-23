@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "FUNCTIONS_WORKER_RUNTIME_VERSION": "~24",
+    "AZURE_FOUNDRY_ENDPOINT": "",
+    "AZURE_FOUNDRY_API_KEY": "",
+    "AZURE_FOUNDRY_MODEL": "claude-sonnet-4-5"
+  },
+  "Host": {
+    "LocalHttpPort": 7072,
+    "CORS": "*"
+  }
+}

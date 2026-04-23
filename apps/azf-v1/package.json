@@ -1,7 +1,7 @@
 {
   "name": "@bankql/azf-v1",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -10,8 +10,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@azure/functions": "^4.7.0",
     "@bankql/schema": "*",
-    "@azure/functions": "^4.7.0"
+    "@standard-schema/spec": "^1.1.0",
+    "@tanstack/ai": "^0.13.0",
+    "@tanstack/ai-anthropic": "^0.8.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "azurite": "^3.34.0",

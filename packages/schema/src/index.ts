@@ -48,3 +48,10 @@ export { toDuckDBCreateTable } from "./duckdb.js";
 
 export { toLLMDescription, toLLMSystemPrompt } from "./llm.js";
 export type { LLMFieldDescription, LLMDatasetDescription } from "./llm.js";
+
+export {
+  queryDataToolSpec,
+  queryDataInputSchema,
+  queryDataOutputSchema,
+} from "./agent/queryDataTool.js";
+export type { QueryDataInput, QueryDataOutput } from "./agent/queryDataTool.js";

@@ -34,6 +34,10 @@ The `defineField()` and `defineDataset()` helpers are identity functions that ex
 
 Zod schemas for dashboard tile configuration (stat, chart, table tiles). Shared by frontend and backend so the full contract lives in one package.
 
+### 3. Agent Tool Specs (`src/agent/`)
+
+Shared LLM tool specs (name, description, Zod input/output schemas) consumed by both the browser (`apps/web` binds client executors) and the server (`apps/azf-v1` passes them to `@tanstack/ai`'s `chat()`). `queryDataToolSpec` defines the `query_data` tool that executes SQL against the in-browser DuckDB instance.
+
 ### Key Export Paths
 
 ```ts
@@ -52,4 +56,11 @@ import { toDuckDBCreateTable } from "@bankql/schema";
 // Tile config
 import { parseTileConfig, TileConfigSchema } from "@bankql/schema";
 import type { TileConfig, TileTemplate } from "@bankql/schema";
+
+// LLM system prompt generation
+import { toLLMSystemPrompt, toLLMDescription } from "@bankql/schema";
+
+// Agent tool specs (shared between browser client + azf-v1 server)
+import { queryDataToolSpec } from "@bankql/schema";
+import type { QueryDataInput, QueryDataOutput } from "@bankql/schema";
 ```

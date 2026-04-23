@@ -1,1 +1,2 @@
-import "./functions/hello";
+import "./functions/hello.js";
+import "./functions/chat.js";

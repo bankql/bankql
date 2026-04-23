@@ -4,9 +4,12 @@ import { queryDataClient } from "~/domains/agent/api/queryDataTool";
 
 const tools = clientTools(queryDataClient);
 
+const CHAT_URL =
+  import.meta.env.VITE_CHAT_URL ?? "http://localhost:7072/api/chat";
+
 export function useAgent() {
   return useChat({
-    connection: fetchServerSentEvents("/api/chat"),
+    connection: fetchServerSentEvents(CHAT_URL),
     tools,
   });
 }
