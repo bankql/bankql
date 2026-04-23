@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ColorModeProvider } from "~/lib/colorMode";
 
 const queryClient = new QueryClient();
 
@@ -22,16 +23,18 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        <ChakraProvider value={defaultSystem}>
-          <QueryClientProvider client={queryClient}>
-            <Outlet />
-          </QueryClientProvider>
-        </ChakraProvider>
+        <ColorModeProvider>
+          <ChakraProvider value={defaultSystem}>
+            <QueryClientProvider client={queryClient}>
+              <Outlet />
+            </QueryClientProvider>
+          </ChakraProvider>
+        </ColorModeProvider>
         <Scripts />
       </body>
     </html>

@@ -13,6 +13,7 @@ import { LuMenu, LuMessageSquare } from "react-icons/lu";
 import { LayoutProvider, useLayout } from "~/domains/layout/hooks/useLayout";
 import ChatPanel from "~/domains/agent/ui/ChatPanel";
 import Sidebar from "~/domains/menu/ui/Sidebar";
+import { ColorModeButton } from "~/lib/colorMode";
 import { useDataStatus } from "~/lib/useDataStatus";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -73,6 +74,8 @@ function LayoutShell({ children }: { children: React.ReactNode }) {
             Data failed to load
           </Text>
         )}
+
+        <ColorModeButton />
 
         <IconButton
           aria-label="Toggle assistant"
