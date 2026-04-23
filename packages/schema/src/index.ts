@@ -26,9 +26,8 @@ export type {
 // Re-export definition helpers
 export { defineField, defineDataset } from "./define.js";
 
-// Re-export schema hashing utilities
-export { hashDataset, hashDatasets, assertDatasetHash } from "./hash.js";
-export type { SchemaHash } from "./hash.js";
+// Schema hashing utilities are Node-only (use node:crypto) and are
+// exposed via the "./hash" subpath so browser bundles never pull them in.
 
 // Re-export tile config schemas
 export {
