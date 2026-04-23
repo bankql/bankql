@@ -4,693 +4,797 @@ export const institutions = defineDataset({
   name: "institutions",
   description:
     "FDIC-insured financial institutions, sourced from the FDIC BankFind dataset.",
-  index: "CERT",
+  index: "certificate",
   fields: {
     // -------------------------------------------------------------------------
     // Identity
     // -------------------------------------------------------------------------
-    CERT: defineField({
+    certificate: defineField({
       type: "integer",
       description: "FDIC Certificate #",
       measure: "nominal",
       format: "id",
+      sourceKey: "CERT",
     }),
-    UNINUM: defineField({
+    uninum: defineField({
       type: "integer",
       description: "FDIC's unique identifier number for holding companies, banks, branches and nondeposit subsidiaries.",
       measure: "nominal",
       format: "id",
+      sourceKey: "UNINUM",
     }),
-    FED_RSSD: defineField({
+    fedRssdId: defineField({
       type: "integer",
       description: "Federal Reserve ID Number",
       measure: "nominal",
       format: "id",
+      sourceKey: "FED_RSSD",
     }),
-    NAME: defineField({
+    name: defineField({
       type: "string",
       description: "Institution name",
       measure: "nominal",
       format: "text",
+      sourceKey: "NAME",
     }),
-    ACTIVE: defineField({
+    active: defineField({
       type: "integer",
       description: "Institution Status",
       measure: "nominal",
       format: "boolean",
       enumValues: ["0", "1"],
+      sourceKey: "ACTIVE",
     }),
-    INACTIVE: defineField({
+    inactive: defineField({
       type: "integer",
       description: "Inactive — institutions that are currently closed but were once insured by the FDIC.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INACTIVE",
     }),
 
     // -------------------------------------------------------------------------
     // Location
     // -------------------------------------------------------------------------
-    ADDRESS: defineField({
+    address: defineField({
       type: "string",
       description: "Street Address",
       measure: "nominal",
       format: "text",
+      sourceKey: "ADDRESS",
     }),
-    ADDRESS2: defineField({
+    address2: defineField({
       type: "string",
       description: "Street Address Line 2",
       measure: "nominal",
       format: "text",
+      sourceKey: "ADDRESS2",
     }),
-    CITY: defineField({
+    city: defineField({
       type: "string",
       description: "City",
       measure: "nominal",
       format: "text",
+      sourceKey: "CITY",
     }),
-    COUNTY: defineField({
+    county: defineField({
       type: "string",
       description: "County",
       measure: "nominal",
       format: "text",
+      sourceKey: "COUNTY",
     }),
-    STNAME: defineField({
+    stateName: defineField({
       type: "string",
       description: "State Name",
       measure: "nominal",
       format: "text",
+      sourceKey: "STNAME",
     }),
-    STALP: defineField({
+    stateAbbreviation: defineField({
       type: "string",
       description: "State Alpha code",
       measure: "nominal",
       format: "text",
+      sourceKey: "STALP",
     }),
-    STNUM: defineField({
+    stateNumber: defineField({
       type: "integer",
       description: "State Number — Federal Information Processing Standard code used to identify states.",
       measure: "nominal",
       format: "id",
+      sourceKey: "STNUM",
     }),
-    STCNTY: defineField({
+    stateCountyCode: defineField({
       type: "string",
       description: "State and county number — five digit FIPS state/county code.",
       measure: "nominal",
       format: "id",
+      sourceKey: "STCNTY",
     }),
-    ZIP: defineField({
+    zip: defineField({
       type: "string",
       description: "Zip Code",
       measure: "nominal",
       format: "text",
+      sourceKey: "ZIP",
     }),
-    LATITUDE: defineField({
+    latitude: defineField({
       type: "float",
       description: "Latitude",
       measure: "quantitative",
       format: "coordinate",
+      sourceKey: "LATITUDE",
     }),
-    LONGITUDE: defineField({
+    longitude: defineField({
       type: "float",
       description: "Longitude",
       measure: "quantitative",
       format: "coordinate",
+      sourceKey: "LONGITUDE",
     }),
 
     // -------------------------------------------------------------------------
     // Financial metrics
     // -------------------------------------------------------------------------
-    ASSET: defineField({
+    totalAssets: defineField({
       type: "float",
       description: "Total assets",
       measure: "quantitative",
       format: "currency-dollars",
       unit: "USD (thousands)",
+      sourceKey: "ASSET",
     }),
-    DEP: defineField({
+    totalDeposits: defineField({
       type: "float",
       description: "Total deposits",
       measure: "quantitative",
       format: "currency-dollars",
       unit: "USD (thousands)",
+      sourceKey: "DEP",
     }),
-    DEPDOM: defineField({
+    domesticDeposits: defineField({
       type: "float",
       description: "Deposits held in domestic offices",
       measure: "quantitative",
       format: "currency-dollars",
       unit: "USD (thousands)",
+      sourceKey: "DEPDOM",
     }),
-    EQ: defineField({
+    equityCapital: defineField({
       type: "float",
       description: "Equity capital",
       measure: "quantitative",
       format: "currency-dollars",
       unit: "USD (thousands)",
+      sourceKey: "EQ",
     }),
-    NETINC: defineField({
+    netIncome: defineField({
       type: "float",
       description: "Net income",
       measure: "quantitative",
       format: "currency-dollars",
       unit: "USD (thousands)",
+      sourceKey: "NETINC",
     }),
-    NETINCQ: defineField({
+    netIncomeQuarterly: defineField({
       type: "float",
       description: "Net income - quarterly",
       measure: "quantitative",
       format: "currency-dollars",
       unit: "USD (thousands)",
+      sourceKey: "NETINCQ",
     }),
-    ROA: defineField({
+    returnOnAssets: defineField({
       type: "float",
       description: "Return on assets (ROA) — net income after taxes (annualized) as a percent of average total assets.",
       measure: "quantitative",
       format: "percentage",
+      sourceKey: "ROA",
     }),
-    ROAQ: defineField({
+    returnOnAssetsQuarterly: defineField({
       type: "float",
       description: "Quarterly return on assets",
       measure: "quantitative",
       format: "percentage",
+      sourceKey: "ROAQ",
     }),
-    ROAPTX: defineField({
+    pretaxReturnOnAssets: defineField({
       type: "float",
       description: "Pretax return on assets",
       measure: "quantitative",
       format: "percentage",
+      sourceKey: "ROAPTX",
     }),
-    ROAPTXQ: defineField({
+    pretaxReturnOnAssetsQuarterly: defineField({
       type: "float",
       description: "Quarterly pretax return on assets",
       measure: "quantitative",
       format: "percentage",
+      sourceKey: "ROAPTXQ",
     }),
-    ROE: defineField({
+    returnOnEquity: defineField({
       type: "float",
       description: "Return on Equity (ROE) — annualized net income as a percent of average equity.",
       measure: "quantitative",
       format: "percentage",
+      sourceKey: "ROE",
     }),
-    ROEQ: defineField({
+    returnOnEquityQuarterly: defineField({
       type: "float",
       description: "Quarterly return on equity",
       measure: "quantitative",
       format: "percentage",
+      sourceKey: "ROEQ",
     }),
 
     // -------------------------------------------------------------------------
     // Classification
     // -------------------------------------------------------------------------
-    BKCLASS: defineField({
+    institutionClass: defineField({
       type: "string",
       description: "Institution Class — charter type, charter agent, Fed membership, and primary federal regulator.",
       measure: "nominal",
       format: "enum",
       enumValues: ["N", "NM", "OI", "SB", "SI", "SL", "SM", "NC", "NS", "CU"],
+      sourceKey: "BKCLASS",
     }),
-    CB: defineField({
+    communityBank: defineField({
       type: "integer",
       description: "Community Bank — flag indicating whether the institution is a community bank.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "CB",
     }),
-    CLCODE: defineField({
+    classCode: defineField({
       type: "integer",
       description: "Numeric Code — two-digit category identifying institution type.",
       measure: "nominal",
       format: "enum",
+      sourceKey: "CLCODE",
     }),
-    CHRTAGNT: defineField({
+    charteringAgency: defineField({
       type: "string",
       description: "Chartering Agency",
       measure: "nominal",
       format: "enum",
       enumValues: ["OCC", "State"],
+      sourceKey: "CHRTAGNT",
     }),
-    MUTUAL: defineField({
+    ownershipType: defineField({
       type: "integer",
       description: "Ownership Type — stock (0) or mutual/non-stock (1) institution.",
       measure: "nominal",
       format: "enum",
+      sourceKey: "MUTUAL",
     }),
-    SPECGRP: defineField({
+    specializationGroup: defineField({
       type: "integer",
       description: "Asset Concentration Hierarchy — primary specialization in terms of asset concentration.",
       measure: "nominal",
       format: "enum",
+      sourceKey: "SPECGRP",
     }),
-    SPECGRPN: defineField({
+    specializationGroupName: defineField({
       type: "string",
       description: "Specialization Group — name of asset concentration specialization.",
       measure: "nominal",
       format: "enum",
+      sourceKey: "SPECGRPN",
     }),
-    INSTAG: defineField({
+    agriculturalLender: defineField({
       type: "integer",
       description: "Agricultural lending institution indicator.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSTAG",
     }),
-    INSTCRCD: defineField({
+    creditCardInstitution: defineField({
       type: "integer",
       description: "Credit Card Institutions — institutions with total loans >50% of assets and credit card loans >50% of total loans.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSTCRCD",
     }),
-    MDI_STATUS_CODE: defineField({
+    minorityStatusCode: defineField({
       type: "integer",
       description: "Minority Status Code",
       measure: "nominal",
       format: "enum",
+      sourceKey: "MDI_STATUS_CODE",
     }),
-    MDI_STATUS_DESC: defineField({
+    minorityStatusDescription: defineField({
       type: "string",
       description: "Minority Status Description",
       measure: "nominal",
       format: "enum",
+      sourceKey: "MDI_STATUS_DESC",
     }),
-    SUBCHAPS: defineField({
+    subchapterS: defineField({
       type: "integer",
       description: "Subchapter S Corporations — flag indicating Subchapter S corporation status.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "SUBCHAPS",
     }),
-    TRUST: defineField({
+    trustPowers: defineField({
       type: "integer",
       description: "Trust Powers — type of trust power the institution possesses.",
       measure: "nominal",
       format: "enum",
       enumValues: ["00", "10", "11", "12", "20", "21", "30", "31", "40"],
+      sourceKey: "TRUST",
     }),
 
     // -------------------------------------------------------------------------
     // Regulatory
     // -------------------------------------------------------------------------
-    REGAGNT: defineField({
+    primaryRegulator: defineField({
       type: "string",
       description: "Primary Regulator",
       measure: "nominal",
       format: "enum",
       enumValues: ["OCC", "FDIC", "OTS", "STATE", "FED"],
+      sourceKey: "REGAGNT",
     }),
-    REGAGENT2: defineField({
+    secondaryRegulator: defineField({
       type: "string",
       description: "Secondary Regulator",
       measure: "nominal",
       format: "enum",
       enumValues: ["CFPB", "OTS"],
+      sourceKey: "REGAGENT2",
     }),
-    FEDCHRTR: defineField({
+    federalCharter: defineField({
       type: "integer",
       description: "Federal charter flag — indicates whether the institution is chartered by the federal government.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "FEDCHRTR",
     }),
-    STCHRTR: defineField({
+    stateCharter: defineField({
       type: "integer",
       description: "State Charter flag.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "STCHRTR",
     }),
-    FED: defineField({
+    federalReserveDistrict: defineField({
       type: "integer",
       description: "Federal Reserve ID Number — district in which the institution is located.",
       measure: "nominal",
       format: "enum",
       enumValues: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+      sourceKey: "FED",
     }),
-    CONSERVE: defineField({
+    conservatorship: defineField({
       type: "string",
       description: "Conservatorship — indicates if an institution is being operated in government conservatorship.",
       measure: "nominal",
       format: "enum",
       enumValues: ["Y", "N"],
+      sourceKey: "CONSERVE",
     }),
-    DENOVO: defineField({
+    denovo: defineField({
       type: "integer",
       description: "Denovo Institution — flag indicating a new institution (not a recharter).",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "DENOVO",
     }),
-    HCTMULT: defineField({
+    multiBankHoldingCompany: defineField({
       type: "integer",
       description: "Bank Holding Company Type — member of a multibank holding company.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "HCTMULT",
     }),
-    IBA: defineField({
+    foreignBankBranch: defineField({
       type: "integer",
       description: "Insured offices of foreign banks.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "IBA",
     }),
-    INSDIF: defineField({
+    depositInsuranceFundMember: defineField({
       type: "integer",
       description: "Deposit Insurance Fund member.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSDIF",
     }),
-    INSFDIC: defineField({
+    fdicInsured: defineField({
       type: "integer",
       description: "FDIC Insured.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSFDIC",
     }),
-    INSBIF: defineField({
+    bankInsuranceFundMember: defineField({
       type: "integer",
       description: "Bank Insurance Fund member.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSBIF",
     }),
-    INSSAIF: defineField({
+    saifInsured: defineField({
       type: "integer",
       description: "SAIF Insured.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSSAIF",
     }),
-    INSSAVE: defineField({
+    insuredSavings: defineField({
       type: "integer",
       description: "Insured Savings Institution.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSSAVE",
     }),
-    INSCOML: defineField({
+    insuredCommercial: defineField({
       type: "integer",
       description: "Insured commercial banks.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "INSCOML",
     }),
-    INSAGNT1: defineField({
+    primaryInsuranceAgency: defineField({
       type: "string",
       description: "Primary Insurance Agency.",
       measure: "nominal",
       format: "enum",
+      sourceKey: "INSAGNT1",
     }),
-    INSAGNT2: defineField({
+    secondaryInsuranceAgency: defineField({
       type: "string",
       description: "Secondary Insurance Fund.",
       measure: "nominal",
       format: "enum",
+      sourceKey: "INSAGNT2",
     }),
-    CFPBFLAG: defineField({
+    cfpbSupervised: defineField({
       type: "integer",
       description: "CFPB Flag — indicates secondary supervision by CFPB.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "CFPBFLAG",
     }),
-    FORM31: defineField({
+    form31Filer: defineField({
       type: "integer",
       description: "FFIEC Call Report 31 Filer — institution filed an FFIEC 031 Call Report.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "FORM31",
     }),
 
     // -------------------------------------------------------------------------
     // Offices
     // -------------------------------------------------------------------------
-    OFFDOM: defineField({
+    domesticOfficeCount: defineField({
       type: "integer",
       description: "Number of Domestic Offices",
       measure: "quantitative",
       format: "count",
+      sourceKey: "OFFDOM",
     }),
-    OFFFOR: defineField({
+    foreignOfficeCount: defineField({
       type: "integer",
       description: "Number of Foreign Offices",
       measure: "quantitative",
       format: "count",
+      sourceKey: "OFFFOR",
     }),
-    OFFOA: defineField({
+    usOfficeCount: defineField({
       type: "integer",
       description: "Number of US Offices — offices in all US commonwealths and territories.",
       measure: "quantitative",
       format: "count",
+      sourceKey: "OFFOA",
     }),
 
     // -------------------------------------------------------------------------
     // Holding company
     // -------------------------------------------------------------------------
-    NAMEHCR: defineField({
+    holdingCompanyName: defineField({
       type: "string",
       description: "Bank Holding Company (Regulatory Top Holder)",
       measure: "nominal",
       format: "text",
+      sourceKey: "NAMEHCR",
     }),
-    RSSDHCR: defineField({
+    holdingCompanyRssdId: defineField({
       type: "integer",
       description: "RSSDID - High Regulatory Holder — Federal Reserve Board ID of the regulatory high holding company.",
       measure: "nominal",
       format: "id",
+      sourceKey: "RSSDHCR",
     }),
-    CITYHCR: defineField({
+    holdingCompanyCity: defineField({
       type: "string",
       description: "City of High Holder",
       measure: "nominal",
       format: "text",
+      sourceKey: "CITYHCR",
     }),
-    STALPHCR: defineField({
+    holdingCompanyState: defineField({
       type: "string",
       description: "Regulatory holding company state location.",
       measure: "nominal",
       format: "text",
+      sourceKey: "STALPHCR",
     }),
-    PARCERT: defineField({
+    parentCertificate: defineField({
       type: "integer",
       description: "Directly owned by another bank (CERT) — FDIC certificate number of the parent bank.",
       measure: "nominal",
       format: "id",
+      sourceKey: "PARCERT",
     }),
-    CERTCONS: defineField({
+    consolidatedParentCertificate: defineField({
       type: "integer",
       description: "Directly owned by another bank (CERT) — certificate number of the parent with which financial data is consolidated.",
       measure: "nominal",
       format: "id",
+      sourceKey: "CERTCONS",
     }),
-    ULTCERT: defineField({
+    ultimateCertificate: defineField({
       type: "integer",
       description: "Ultimate Cert — cert number of the last successor or acquirer.",
       measure: "nominal",
       format: "id",
+      sourceKey: "ULTCERT",
     }),
-    NEWCERT: defineField({
+    newCertificate: defineField({
       type: "integer",
       description: "New certificate number — new cert resulting from a merger or acquisition.",
       measure: "nominal",
       format: "id",
+      sourceKey: "NEWCERT",
     }),
 
     // -------------------------------------------------------------------------
     // Geographic context
     // -------------------------------------------------------------------------
-    CBSA: defineField({
+    cbsaName: defineField({
       type: "string",
       description: "Core Based Statistical Area Name",
       measure: "nominal",
       format: "text",
+      sourceKey: "CBSA",
     }),
-    CBSA_NO: defineField({
+    cbsaNumber: defineField({
       type: "integer",
       description: "Core Based Statistical Areas — numeric CBSA code.",
       measure: "nominal",
       format: "id",
+      sourceKey: "CBSA_NO",
     }),
-    CBSA_DIV: defineField({
+    cbsaDivisionName: defineField({
       type: "string",
       description: "Metropolitan Divisions Name",
       measure: "nominal",
       format: "text",
+      sourceKey: "CBSA_DIV",
     }),
-    CBSA_DIV_FLG: defineField({
+    cbsaDivisionMember: defineField({
       type: "integer",
       description: "Metropolitan Divisions Flag — member of a Core Based Statistical Division.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "CBSA_DIV_FLG",
     }),
-    CBSA_DIV_NO: defineField({
+    cbsaDivisionNumber: defineField({
       type: "integer",
       description: "Metropolitan Divisions Number",
       measure: "nominal",
       format: "id",
+      sourceKey: "CBSA_DIV_NO",
     }),
-    CBSA_METRO: defineField({
+    cbsaMetroNumber: defineField({
       type: "integer",
       description: "Metropolitan Division Number — numeric Metropolitan Statistical Area code.",
       measure: "nominal",
       format: "id",
+      sourceKey: "CBSA_METRO",
     }),
-    CBSA_METRO_FLG: defineField({
+    cbsaMetroMember: defineField({
       type: "integer",
       description: "Metropolitan Division Flag — institution is in a Metropolitan Statistical Area.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "CBSA_METRO_FLG",
     }),
-    CBSA_METRO_NAME: defineField({
+    cbsaMetroName: defineField({
       type: "string",
       description: "Metropolitan Division Name",
       measure: "nominal",
       format: "text",
+      sourceKey: "CBSA_METRO_NAME",
     }),
-    CBSA_MICRO_FLG: defineField({
+    cbsaMicroMember: defineField({
       type: "integer",
       description: "Micropolitan Division Flag — institution is in a Micropolitan Statistical Area.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "CBSA_MICRO_FLG",
     }),
-    CSA: defineField({
+    csaName: defineField({
       type: "string",
       description: "Combined Statistical Area Name",
       measure: "nominal",
       format: "text",
+      sourceKey: "CSA",
     }),
-    CSA_FLG: defineField({
+    csaMember: defineField({
       type: "integer",
       description: "CSA Area Flag — institution is in a Combined Statistical Area.",
       measure: "nominal",
       format: "boolean",
+      sourceKey: "CSA_FLG",
     }),
-    CSA_NO: defineField({
+    csaNumber: defineField({
       type: "integer",
       description: "Combined Statistical Area Number",
       measure: "nominal",
       format: "id",
+      sourceKey: "CSA_NO",
     }),
-    FDICDBS: defineField({
+    fdicGeographicRegion: defineField({
       type: "string",
       description: "FDIC Geographic Region",
       measure: "nominal",
       format: "enum",
       enumValues: ["Boston", "New York", "Atlanta", "Memphis", "Chicago", "Kansas City", "Dallas", "San Francisco"],
+      sourceKey: "FDICDBS",
     }),
-    FDICREGN: defineField({
+    fdicSupervisoryRegion: defineField({
       type: "string",
       description: "FDIC Supervisory Region",
       measure: "nominal",
       format: "enum",
       enumValues: ["Boston", "New York", "Atlanta", "Memphis", "Chicago", "Kansas City", "Dallas", "San Francisco"],
+      sourceKey: "FDICREGN",
     }),
-    FDICSUPV: defineField({
+    federalReserveRegion: defineField({
       type: "string",
       description: "Federal Reserve District",
       measure: "nominal",
       format: "enum",
       enumValues: ["New York", "Atlanta", "Chicago", "Kansas City", "Dallas", "San Francisco", "Washington"],
+      sourceKey: "FDICSUPV",
     }),
-    OCCDIST: defineField({
+    occDistrict: defineField({
       type: "string",
       description: "Office of the Comptroller — OCC District.",
       measure: "nominal",
       format: "enum",
       enumValues: ["Northeast", "Southeast", "Central", "Midwest", "Southwest", "West"],
+      sourceKey: "OCCDIST",
     }),
-    SUPRV_FD: defineField({
+    supervisoryRegionNumber: defineField({
       type: "integer",
       description: "Supervisory Region Number — FDIC Supervisory Division or Region.",
       measure: "nominal",
       format: "enum",
       enumValues: ["02", "05", "09", "11", "13", "14", "16"],
+      sourceKey: "SUPRV_FD",
     }),
-    QBPRCOML: defineField({
+    qbpCommercialBankRegion: defineField({
       type: "string",
       description: "Quarterly Banking Profile Commercial Bank Region",
       measure: "nominal",
       format: "text",
+      sourceKey: "QBPRCOML",
     }),
 
     // -------------------------------------------------------------------------
     // Dates
     // -------------------------------------------------------------------------
-    ESTYMD: defineField({
+    establishedDate: defineField({
       type: "date",
       description: "Established Date — date on which the institution began operations.",
       measure: "temporal",
       format: "date",
+      sourceKey: "ESTYMD",
     }),
-    INSDATE: defineField({
+    insuranceDate: defineField({
       type: "date",
       description: "Date of Deposit Insurance — date the institution obtained federal deposit insurance.",
       measure: "temporal",
       format: "date",
+      sourceKey: "INSDATE",
     }),
-    INSDROPDATE: defineField({
+    insuranceDropDate: defineField({
       type: "date",
       description: "Date of Dropped Deposit Insurance",
       measure: "temporal",
       format: "date",
+      sourceKey: "INSDROPDATE",
     }),
-    ENDEFYMD: defineField({
+    endDate: defineField({
       type: "date",
       description: "End date — date the institution became inactive (for closed institutions).",
       measure: "temporal",
       format: "date",
+      sourceKey: "ENDEFYMD",
     }),
-    EFFDATE: defineField({
+    effectiveDate: defineField({
       type: "date",
       description: "Last Structure Change Effective Date",
       measure: "temporal",
       format: "date",
+      sourceKey: "EFFDATE",
     }),
-    CFPBEFFDTE: defineField({
+    cfpbStartDate: defineField({
       type: "date",
       description: "CFPB Effective Date — date the institution began secondary supervision by CFPB.",
       measure: "temporal",
       format: "date",
+      sourceKey: "CFPBEFFDTE",
     }),
-    CFPBENDDTE: defineField({
+    cfpbEndDate: defineField({
       type: "date",
       description: "CFPB End Date — date the institution ended supervision by CFPB.",
       measure: "temporal",
       format: "date",
+      sourceKey: "CFPBENDDTE",
     }),
-    REPDTE: defineField({
+    reportDate: defineField({
       type: "date",
       description: "Report Date — last day of the financial reporting period.",
       measure: "temporal",
       format: "date",
+      sourceKey: "REPDTE",
     }),
-    DATEUPDT: defineField({
+    lastUpdated: defineField({
       type: "date",
       description: "Last update",
       measure: "temporal",
       format: "date",
+      sourceKey: "DATEUPDT",
     }),
-    RUNDATE: defineField({
+    runDate: defineField({
       type: "date",
       description: "Run Date — day the institution information was updated.",
       measure: "temporal",
       format: "date",
+      sourceKey: "RUNDATE",
     }),
-    PROCDATE: defineField({
+    processDate: defineField({
       type: "date",
       description: "Last Structure Change Process Date",
       measure: "temporal",
       format: "date",
+      sourceKey: "PROCDATE",
     }),
 
     // -------------------------------------------------------------------------
     // Web
     // -------------------------------------------------------------------------
-    WEBADDR: defineField({
+    webAddress: defineField({
       type: "string",
       description: "Primary Internet Web Address",
       measure: "nominal",
       format: "url",
+      sourceKey: "WEBADDR",
     }),
 
     // -------------------------------------------------------------------------
     // Other identifiers
     // -------------------------------------------------------------------------
-    CHARTER: defineField({
+    occCharterNumber: defineField({
       type: "string",
       description: "OCC Charter Number",
       measure: "nominal",
       format: "id",
+      sourceKey: "CHARTER",
     }),
-    DOCKET: defineField({
+    otsDocketNumber: defineField({
       type: "string",
       description: "OTS Docket Number",
       measure: "nominal",
       format: "id",
+      sourceKey: "DOCKET",
     }),
   },
 });

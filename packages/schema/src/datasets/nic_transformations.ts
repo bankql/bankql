@@ -3,54 +3,60 @@ import { defineDataset, defineField } from "../define.js";
 export const nic_transformations = defineDataset({
   name: "nic_transformations",
   description:
-    "Federal Reserve NIC Transformations table — mergers, failures, charter discontinuations, splits, and asset sales. Composite primary key: ID_RSSD_PREDECESSOR + ID_RSSD_SUCCESSOR + DT_TRANS.",
+    "Federal Reserve NIC Transformations table — mergers, failures, charter discontinuations, splits, and asset sales. Composite primary key: predecessorRssdId + successorRssdId + transformationDate.",
   fields: {
     // -------------------------------------------------------------------------
     // Composite primary key
     // -------------------------------------------------------------------------
-    ID_RSSD_PREDECESSOR: defineField({
+    predecessorRssdId: defineField({
       type: "integer",
       description: "RSSD ID of Predecessor — the entity that was transformed (the non-survivor in a merger).",
       measure: "nominal",
       format: "id",
-      relation: { dataset: "nic_attributes", field: "ID_RSSD", cardinality: "many:1" },
+      relation: { dataset: "nic_attributes", field: "rssdId", cardinality: "many:1" },
+      sourceKey: "ID_RSSD_PREDECESSOR",
     }),
-    ID_RSSD_SUCCESSOR: defineField({
+    successorRssdId: defineField({
       type: "integer",
       description: "RSSD ID of Successor — the entity that continues or comes into existence as a result of the transformation (the survivor in a merger).",
       measure: "nominal",
       format: "id",
-      relation: { dataset: "nic_attributes", field: "ID_RSSD", cardinality: "many:1" },
+      relation: { dataset: "nic_attributes", field: "rssdId", cardinality: "many:1" },
+      sourceKey: "ID_RSSD_SUCCESSOR",
     }),
-    DT_TRANS: defineField({
+    transformationDate: defineField({
       type: "integer",
       description: "Date of Transformation — date on which the transformation became effective. Format YYYYMMDD.",
       measure: "temporal",
       format: "date",
+      sourceKey: "DT_TRANS",
     }),
-    D_DT_TRANS: defineField({
+    transformationTimestamp: defineField({
       type: "datetime",
       description: "Date of Transformation (DB2 datetime format).",
       measure: "temporal",
       format: "datetime",
+      sourceKey: "D_DT_TRANS",
     }),
 
     // -------------------------------------------------------------------------
     // Transformation details
     // -------------------------------------------------------------------------
-    TRNSFM_CD: defineField({
+    transformationCode: defineField({
       type: "float",
       description: "Transformation Type Code — describes the event causing the transformation.",
       measure: "nominal",
       format: "enum",
       enumValues: ["1", "5", "7", "9", "50"],
+      sourceKey: "TRNSFM_CD",
     }),
-    ACCT_METHOD: defineField({
+    accountingMethod: defineField({
       type: "float",
       description: "Accounting Method — method used in resolving a non-failure merger (0=N/A, 1=Pooling of interests, 2=Purchase/Acquisition).",
       measure: "nominal",
       format: "enum",
       enumValues: ["0", "1", "2"],
+      sourceKey: "ACCT_METHOD",
     }),
   },
 });

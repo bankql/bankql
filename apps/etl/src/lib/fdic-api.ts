@@ -19,7 +19,10 @@ export async function fetchFdicApiToCsv(
   dataset: DatasetDef,
   outPath: string,
 ): Promise<string> {
-  const fields = Object.keys(dataset.fields).join(",");
+  const sourceKeys = Object.entries(dataset.fields).map(
+    ([key, field]) => field.sourceKey ?? key,
+  );
+  const fields = sourceKeys.join(",");
   const rows: string[][] = [];
   let offset = 0;
   let isFirst = true;
@@ -44,13 +47,12 @@ export async function fetchFdicApiToCsv(
     if (page.length === 0) break;
 
     if (isFirst) {
-      // Write CSV header
-      rows.push(Object.keys(dataset.fields));
+      rows.push(sourceKeys);
       isFirst = false;
     }
 
     for (const row of page) {
-      rows.push(Object.keys(dataset.fields).map((k) => formatCsvValue(row[k])));
+      rows.push(sourceKeys.map((k) => formatCsvValue(row[k])));
     }
 
     console.log(`[fdic-api]   offset=${offset} got ${page.length} rows`);

@@ -55,6 +55,9 @@ export interface FieldDef<T extends PerspectiveType = PerspectiveType> {
   relation?: Relation;
   /** Links this temporal field to a canonical activity type (e.g. "Payment.Created"). */
   activityType?: string;
+  /** Original column name in the source data (FDIC CSV header, API field, NIC column).
+   *  ETL uses this to map source → human-readable key during CSV staging. */
+  sourceKey?: string;
 }
 
 /** A dataset definition: name, metadata, index column, and field map. */

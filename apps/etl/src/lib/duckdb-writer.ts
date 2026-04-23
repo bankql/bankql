@@ -12,19 +12,20 @@ function buildCastSelect(dataset: DatasetDef): string {
   return Object.entries(dataset.fields)
     .map(([name, field]) => {
       const f = field as FieldDef;
+      const src = f.sourceKey ?? name;
       switch (f.type) {
         case "date":
-          return `TRY_STRPTIME("${name}", ['%m/%d/%Y', '%Y-%m-%d'])::DATE AS "${name}"`;
+          return `TRY_STRPTIME("${src}", ['%m/%d/%Y', '%Y-%m-%d'])::DATE AS "${name}"`;
         case "datetime":
-          return `TRY_CAST("${name}" AS TIMESTAMP) AS "${name}"`;
+          return `TRY_CAST("${src}" AS TIMESTAMP) AS "${name}"`;
         case "integer":
-          return `TRY_CAST("${name}" AS INTEGER) AS "${name}"`;
+          return `TRY_CAST("${src}" AS INTEGER) AS "${name}"`;
         case "float":
-          return `TRY_CAST("${name}" AS DOUBLE) AS "${name}"`;
+          return `TRY_CAST("${src}" AS DOUBLE) AS "${name}"`;
         case "boolean":
-          return `TRY_CAST("${name}" AS BOOLEAN) AS "${name}"`;
+          return `TRY_CAST("${src}" AS BOOLEAN) AS "${name}"`;
         default:
-          return `"${name}"`;
+          return `"${src}" AS "${name}"`;
       }
     })
     .join(",\n       ");
