@@ -1,9 +1,19 @@
-import { Box, Flex, IconButton, Input, Splitter, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Input,
+  Spinner,
+  Splitter,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { LuMenu, LuMessageSquare } from "react-icons/lu";
 import { LayoutProvider, useLayout } from "~/domains/layout/hooks/useLayout";
 import ChatPanel from "~/domains/agent/ui/ChatPanel";
 import Sidebar from "~/domains/menu/ui/Sidebar";
+import { useDataStatus } from "~/lib/useDataStatus";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,6 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 function LayoutShell({ children }: { children: React.ReactNode }) {
   const { sidebar, assistant } = useLayout();
   const [openSize, setOpenSize] = useState<number[]>([70, 30]);
+  const dataStatus = useDataStatus();
 
   const onResize = useCallback(
     (details: { size: number[] }) => {
@@ -50,6 +61,18 @@ function LayoutShell({ children }: { children: React.ReactNode }) {
         <Flex flex="1" justify="center">
           <Input placeholder="Search..." size="sm" maxW="md" />
         </Flex>
+
+        {dataStatus === "loading" && (
+          <Flex align="center" gap="2" color="fg.muted">
+            <Spinner size="xs" />
+            <Text fontSize="xs">Loading data…</Text>
+          </Flex>
+        )}
+        {dataStatus === "error" && (
+          <Text fontSize="xs" color="fg.error">
+            Data failed to load
+          </Text>
+        )}
 
         <IconButton
           aria-label="Toggle assistant"
