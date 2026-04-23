@@ -1,3 +1,4 @@
-import { hydrateStart } from "@tanstack/react-start/client";
+import { StartClient } from "@tanstack/react-start/client";
+import { hydrateRoot } from "react-dom/client";
 
-hydrateStart();
+hydrateRoot(document, <StartClient />);

@@ -45,3 +45,6 @@ export { TileTemplateSchema } from "./tile-templates.js";
 export type { TileTemplate } from "./tile-templates.js";
 
 export { toDuckDBCreateTable } from "./duckdb.js";
+
+export { toLLMDescription, toLLMSystemPrompt } from "./llm.js";
+export type { LLMFieldDescription, LLMDatasetDescription } from "./llm.js";
