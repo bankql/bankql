@@ -4,9 +4,10 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "FUNCTIONS_WORKER_RUNTIME_VERSION": "~24",
-    "AZURE_FOUNDRY_ENDPOINT": "",
+    "AZURE_FOUNDRY_ENDPOINT": "https://<resource>.openai.azure.com/anthropic",
     "AZURE_FOUNDRY_API_KEY": "",
-    "AZURE_FOUNDRY_MODEL": "claude-sonnet-4-5"
+    "AZURE_FOUNDRY_MODEL": "<azure-deployment-name>",
+    "AZURE_FOUNDRY_API_VERSION": "2023-06-01"
   },
   "Host": {
     "LocalHttpPort": 7072,

@@ -57,9 +57,10 @@ The LLM never executes SQL server-side. It emits `query_data` tool calls, which 
 
 Required in `local.settings.json` `Values`:
 
-- `AZURE_FOUNDRY_ENDPOINT` — full Foundry deployment URL
+- `AZURE_FOUNDRY_ENDPOINT` — Foundry resource URL with the `/anthropic` path suffix, e.g. `https://<resource>.openai.azure.com/anthropic`. The `@anthropic-ai/sdk` appends `/v1/messages` to this.
 - `AZURE_FOUNDRY_API_KEY` — Foundry API key
-- `AZURE_FOUNDRY_MODEL` — Anthropic model name routed through Foundry
+- `AZURE_FOUNDRY_MODEL` — Azure **deployment** name (e.g. `claude-sonnet-4-6-1`), not the Anthropic model ID. Foundry routes by deployment, not by canonical model name. `@tanstack/ai-anthropic` types will reject this; cast to `AnthropicChatModel` at the boundary.
+- `AZURE_FOUNDRY_API_VERSION` — required query param on every Foundry call (current value `2023-06-01`). Injected via the Anthropic SDK's `defaultQuery`. Bump if Foundry ships a new version.
 
 See `local.settings.example.json` for the shape. Missing vars cause `chatHandler` to throw on first request (500).
 
