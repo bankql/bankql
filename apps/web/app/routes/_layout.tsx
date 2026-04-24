@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { AgentProvider } from "~/domains/agent/hooks/useAgent";
 import Layout from "~/domains/layout/ui/Layout";
 
 export const Route = createFileRoute("/_layout")({
@@ -7,8 +8,10 @@ export const Route = createFileRoute("/_layout")({
 
 function LayoutRoute() {
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <AgentProvider>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </AgentProvider>
   );
 }
