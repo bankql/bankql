@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout.index'
+import { Route as LayoutDatasetsNameRouteImport } from './routes/_layout.datasets.$name'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -21,24 +22,32 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutDatasetsNameRoute = LayoutDatasetsNameRouteImport.update({
+  id: '/datasets/$name',
+  path: '/datasets/$name',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
+  '/datasets/$name': typeof LayoutDatasetsNameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
+  '/datasets/$name': typeof LayoutDatasetsNameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/datasets/$name': typeof LayoutDatasetsNameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/datasets/$name'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_layout' | '/_layout/'
+  to: '/' | '/datasets/$name'
+  id: '__root__' | '/_layout' | '/_layout/' | '/_layout/datasets/$name'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -61,15 +70,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/datasets/$name': {
+      id: '/_layout/datasets/$name'
+      path: '/datasets/$name'
+      fullPath: '/datasets/$name'
+      preLoaderRoute: typeof LayoutDatasetsNameRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
 interface LayoutRouteChildren {
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutDatasetsNameRoute: typeof LayoutDatasetsNameRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutDatasetsNameRoute: LayoutDatasetsNameRoute,
 }
 
 const LayoutRouteWithChildren =

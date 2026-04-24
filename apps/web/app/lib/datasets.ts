@@ -32,6 +32,14 @@ const UNPUBLISHED = new Set([
   "nic_transformations",
 ]);
 
+export function isDatasetPublished(name: string): boolean {
+  return !UNPUBLISHED.has(name);
+}
+
+export const publishedDatasets = (allDatasets as unknown as DatasetDef[]).filter(
+  (d) => isDatasetPublished(d.name),
+);
+
 interface ServerManifest {
   name: string;
   schemaHash: string;
@@ -58,9 +66,7 @@ export function bootstrapData(): Promise<void> {
 
 async function run(): Promise<void> {
   try {
-    const active = (allDatasets as unknown as DatasetDef[]).filter(
-      (d) => !UNPUBLISHED.has(d.name),
-    );
+    const active = publishedDatasets;
     initDatasetLoads(active.map((d) => d.name));
     await initTables(active);
     await createViews(active);
