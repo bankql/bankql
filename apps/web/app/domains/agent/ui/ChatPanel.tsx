@@ -1,6 +1,7 @@
 import {
   Box,
   Code,
+  Collapsible,
   Flex,
   IconButton,
   Stack,
@@ -8,7 +9,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useCallback, useRef, useState } from "react";
-import { LuSend } from "react-icons/lu";
+import { LuChevronRight, LuSend } from "react-icons/lu";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useAgent } from "~/domains/agent/hooks/useAgent";
@@ -101,42 +102,20 @@ function PartView({ part, isUser }: { part: MessagePart; isUser: boolean }) {
           <Markdown remarkPlugins={[remarkGfm]}>{part.content}</Markdown>
         </Prose>
       );
-    case "tool-call":
+    case "tool-call": {
+      const sql =
+        part.input && typeof part.input === "object" && "sql" in part.input
+          ? String((part.input as { sql: unknown }).sql)
+          : String(part.arguments ?? "");
       return (
-        <Box borderWidth="1px" rounded="sm" p="2" bg="bg">
-          <Text textStyle="xs" color="fg.muted" mb="1">
-            query_data
-          </Text>
-          <Code
-            display="block"
-            whiteSpace="pre-wrap"
-            fontSize="xs"
-            p="1"
-            bg="transparent"
-          >
-            {part.input && typeof part.input === "object" && "sql" in part.input
-              ? String((part.input as { sql: unknown }).sql)
-              : part.arguments}
-          </Code>
-        </Box>
+        <ToolPartCollapsible label="query_data" preview={sql} body={sql} />
       );
-    case "tool-result":
-      return (
-        <Box borderWidth="1px" rounded="sm" p="2" bg="bg">
-          <Text textStyle="xs" color="fg.muted" mb="1">
-            {part.state === "error" ? "error" : "result"}
-          </Text>
-          <Code
-            display="block"
-            whiteSpace="pre-wrap"
-            fontSize="xs"
-            p="1"
-            bg="transparent"
-          >
-            {part.error ?? part.content}
-          </Code>
-        </Box>
-      );
+    }
+    case "tool-result": {
+      const body = String(part.error ?? part.content ?? "");
+      const label = part.state === "error" ? "error" : "result";
+      return <ToolPartCollapsible label={label} preview={body} body={body} />;
+    }
     case "thinking":
       return (
         <Text textStyle="xs" color="fg.muted" fontStyle="italic">
@@ -146,6 +125,66 @@ function PartView({ part, isUser }: { part: MessagePart; isUser: boolean }) {
     default:
       return null;
   }
+}
+
+function ToolPartCollapsible({
+  label,
+  preview,
+  body,
+}: {
+  label: string;
+  preview: string;
+  body: string;
+}) {
+  const summary = preview.replace(/\s+/g, " ").trim().slice(0, 80);
+  return (
+    <Collapsible.Root>
+      <Box borderWidth="1px" rounded="sm" bg="bg" overflow="hidden">
+        <Collapsible.Trigger asChild>
+          <Flex
+            as="button"
+            direction="row"
+            align="center"
+            gap="2"
+            px="2"
+            py="1"
+            w="full"
+            textAlign="left"
+            cursor="pointer"
+            _hover={{ bg: "bg.muted" }}
+            _open={{ "& .chevron": { transform: "rotate(90deg)" } }}
+          >
+            <Box
+              className="chevron"
+              display="inline-flex"
+              transition="transform 0.15s"
+              color="fg.muted"
+            >
+              <LuChevronRight />
+            </Box>
+            <Text textStyle="xs" color="fg.muted" flexShrink="0">
+              {label}
+            </Text>
+            <Text textStyle="xs" color="fg.subtle" truncate flex="1">
+              {summary}
+            </Text>
+          </Flex>
+        </Collapsible.Trigger>
+        <Collapsible.Content>
+          <Code
+            display="block"
+            whiteSpace="pre-wrap"
+            fontSize="xs"
+            p="2"
+            bg="transparent"
+            borderTopWidth="1px"
+          >
+            {body}
+          </Code>
+        </Collapsible.Content>
+      </Box>
+    </Collapsible.Root>
+  );
 }
 
 function Composer({
