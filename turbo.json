@@ -18,7 +18,14 @@
       "dependsOn": ["^lint"]
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": [
+        "src/**",
+        "vitest.config.ts",
+        "tsconfig.json",
+        "package.json"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"]

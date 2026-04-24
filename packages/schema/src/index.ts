@@ -1,12 +1,6 @@
 /**
- * @fi-product/schemas — Shared rich schema definitions for all Arrow datasets.
- *
- * Usage:
- *   import { payments, invoices } from "@fi-product/schemas";
- *   import { toPerspectiveSchema, Row } from "@fi-product/schemas/derive";
- *
- *   const schema = toPerspectiveSchema(payments);
- *   type PaymentRow = Row<typeof payments>;
+ * @bankql/schema — Single source of truth for FDIC/NIC dataset definitions,
+ * tile configs, and agent tool specs. See /.claude/rules/start-here.md for usage.
  */
 
 // Re-export all dataset definitions

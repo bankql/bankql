@@ -12,7 +12,7 @@ A `DatasetDef` is a rich metadata object encoding column types, display formats,
 
 - **DuckDB `CREATE TABLE` DDL** — via `toDuckDBCreateTable()`, used by `apps/etl` to stage CSVs
 - **Parquet + Arrow IPC output** — ETL writes typed files for each dataset
-- **TypeScript row types** (`Row<T>`, `NullableRow<T>`) — full type inference with no manual annotations
+- **TypeScript row types** — derived directly from `DatasetDef` literal types via `defineField` / `defineDataset` inference; no separate helper import required
 - **Foreign-key graphs** — joins and drill-downs between datasets
 - **LLM system prompts** — AI features that understand the data
 

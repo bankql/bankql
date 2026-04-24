@@ -6,7 +6,6 @@ dist
 .turbo
 *.local
 .DS_Store
-package-lock.json
 local.settings.json
 __azurite_db*
 __blobstorage__
@@ -14,3 +13,4 @@ __queuestorage__
 __tablesstorage__
 AzuriteConfig
 .azurite
+coverage
