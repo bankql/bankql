@@ -7,6 +7,7 @@ import {
   nic_attributes,
   nic_relationships,
   nic_transformations,
+  credit_unions,
 } from "@bankql/schema";
 import { uploadDatasetBlobs } from "./lib/azure-upload.js";
 
@@ -18,6 +19,7 @@ const ALL_DATASETS = [
   nic_attributes,
   nic_relationships,
   nic_transformations,
+  credit_unions,
 ];
 
 export async function uploadAll() {

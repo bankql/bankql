@@ -12,7 +12,7 @@ import AdmZip from "adm-zip";
 export async function downloadZipAndExtractCsv(
   url: string,
   outPath: string,
-  csvFilename?: string,
+  entryFilename?: string,
 ): Promise<string> {
   const zipPath = outPath + ".zip";
 
@@ -23,7 +23,6 @@ export async function downloadZipAndExtractCsv(
   if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
   if (!res.body) throw new Error("Response has no body");
 
-  // Stream to disk
   await pipeline(
     Readable.fromWeb(res.body as import("stream/web").ReadableStream),
     createWriteStream(zipPath),
@@ -33,18 +32,18 @@ export async function downloadZipAndExtractCsv(
   const zip = new AdmZip(zipPath);
   const entries = zip.getEntries();
 
-  const csvEntry = csvFilename
-    ? entries.find((e) => e.entryName === csvFilename || path.basename(e.entryName) === csvFilename)
+  const entry = entryFilename
+    ? entries.find((e) => e.entryName === entryFilename || path.basename(e.entryName) === entryFilename)
     : entries.find((e) => e.entryName.toLowerCase().endsWith(".csv"));
 
-  if (!csvEntry) {
+  if (!entry) {
     const names = entries.map((e) => e.entryName).join(", ");
-    throw new Error(`No matching CSV found in ZIP. Entries: ${names}`);
+    throw new Error(`No matching entry found in ZIP. Entries: ${names}`);
   }
 
-  await fs.writeFile(outPath, csvEntry.getData());
+  await fs.writeFile(outPath, entry.getData());
   await fs.unlink(zipPath);
 
-  console.log(`[bulk-download] Extracted ${csvEntry.entryName} → ${outPath}`);
+  console.log(`[bulk-download] Extracted ${entry.entryName} → ${outPath}`);
   return outPath;
 }

@@ -3,19 +3,22 @@ import fs from "node:fs/promises";
 import { Database } from "duckdb-async";
 import { toDuckDBCreateTable, type DatasetDef, type FieldDef } from "@bankql/schema";
 
-/**
- * Build a SELECT expression for each field that casts from VARCHAR to the target type.
- * Date columns use TRY_STRPTIME with both MM/DD/YYYY and ISO YYYY-MM-DD formats,
- * since FDIC CSVs mix these formats within the same column.
- */
+const DATE_FORMATS = [
+  "%m/%d/%Y",
+  "%Y-%m-%d",
+  "%-m/%-d/%Y %-H:%M:%S",
+  "%-m/%-d/%Y %-I:%M:%S %p",
+];
+
 function buildCastSelect(dataset: DatasetDef): string {
+  const dateFormatList = DATE_FORMATS.map((f) => `'${f}'`).join(", ");
   return Object.entries(dataset.fields)
     .map(([name, field]) => {
       const f = field as FieldDef;
       const src = f.sourceKey ?? name;
       switch (f.type) {
         case "date":
-          return `TRY_STRPTIME("${src}", ['%m/%d/%Y', '%Y-%m-%d'])::DATE AS "${name}"`;
+          return `TRY_STRPTIME("${src}", [${dateFormatList}])::DATE AS "${name}"`;
         case "datetime":
           return `TRY_CAST("${src}" AS TIMESTAMP) AS "${name}"`;
         case "integer":

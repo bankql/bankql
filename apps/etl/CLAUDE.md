@@ -16,6 +16,7 @@ npm run fetch:sod             # ⚠ see known issues below
 npm run fetch:nic-attributes  # ⚠ see known issues below
 npm run fetch:nic-relationships
 npm run fetch:nic-transformations
+npm run fetch:ncua-credit-unions
 ```
 
 ## File Layout
@@ -61,7 +62,7 @@ Auth uses `DefaultAzureCredential` — run `az login` for local dev. The account
 
 - PRIMARY KEY constraints are stripped from the staging DDL — FDIC source data contains duplicate keys (confirmed in `events`)
 - CSVs are loaded as `all_varchar=true` then cast explicitly per column type
-- Date columns use `TRY_STRPTIME` with both `%m/%d/%Y` and `%Y-%m-%d` — FDIC mixes formats in the same column
+- Date columns use `TRY_STRPTIME` with `%m/%d/%Y`, `%Y-%m-%d`, `%-m/%-d/%Y %-H:%M:%S`, and `%-m/%-d/%Y %-I:%M:%S %p` — FDIC and NCUA each mix formats (NCUA includes a time component, sometimes with AM/PM)
 - Sentinel values `9999-12-31` and `01/01/9999` are treated as NULL
 - Arrow IPC output was removed — `FORMAT ARROW` is not available in duckdb-async 1.4.x
 
@@ -72,6 +73,9 @@ The FDIC bulk ZIP URL (`banks.data.fdic.gov/bulk/fdic_bulk__Summary_Of_Deposits.
 
 ### FFIEC NIC datasets — fetch:nic-*
 `ffiec.gov/nicpubweb/content/NICXMLDATA/` is behind a Cloudflare bot challenge and cannot be fetched programmatically. Workaround: download the 3 ZIPs manually from the FFIEC website and place them in `/tmp/etl/raw/` as `nic_attributes.csv`, `nic_relationships.csv`, `nic_transformations.csv` (after extracting), then run `npm run upload` directly.
+
+### NCUA credit unions — fetch:ncua-credit-unions
+Pulls the quarterly Call Report ZIP from `ncua.gov/files/publications/analysis/call-report-data-YYYY-MM.zip` and extracts `FOICU.txt` (the roster). The URL is pinned to `2025-12` — bump the constant in `scripts/fetch-ncua-credit-unions.ts` as newer quarters drop (MM ∈ {03, 06, 09, 12}). Only the roster is ingested today; financial line items (`FS220*.txt`) and branch info live in the same ZIP and are follow-up work.
 
 ## Working Datasets (confirmed)
 
@@ -84,3 +88,4 @@ The FDIC bulk ZIP URL (`banks.data.fdic.gov/bulk/fdic_bulk__Summary_Of_Deposits.
 | nic_attributes | — | ✗ Cloudflare block |
 | nic_relationships | — | ✗ Cloudflare block |
 | nic_transformations | — | ✗ Cloudflare block |
+| credit_unions | 4,374 | ✓ parquet builds (upload pending) |

@@ -29,6 +29,7 @@ The `defineField()` and `defineDataset()` helpers are identity functions that ex
 | `nic_attributes` | FFIEC NIC bulk ZIP | Fed entity characteristics, versioned by date range |
 | `nic_relationships` | FFIEC NIC bulk ZIP | Ownership/control relationships between entities |
 | `nic_transformations` | FFIEC NIC bulk ZIP | Mergers, failures, charter discontinuations |
+| `credit_unions` | NCUA quarterly Call Report ZIP (FOICU.txt) | Roster of federally-insured credit unions |
 
 ### 2. Tile Config Schemas (`src/tiles.ts`, `src/tile-templates.ts`)
 
@@ -42,7 +43,7 @@ Shared LLM tool specs (name, description, Zod input/output schemas) consumed by 
 
 ```ts
 // Dataset definitions
-import { institutions, locations, events, sod, nic_attributes, nic_relationships, nic_transformations } from "@bankql/schema";
+import { institutions, locations, events, sod, nic_attributes, nic_relationships, nic_transformations, credit_unions } from "@bankql/schema";
 
 // Core types
 import type { DatasetDef, FieldDef, PerspectiveType, Measure, Format } from "@bankql/schema";

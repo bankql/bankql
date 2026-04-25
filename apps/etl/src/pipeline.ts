@@ -6,6 +6,7 @@ import { run as fetchSod } from "./scripts/fetch-fdic-sod.js";
 import { run as fetchNicAttributes } from "./scripts/fetch-nic-attributes.js";
 import { run as fetchNicRelationships } from "./scripts/fetch-nic-relationships.js";
 import { run as fetchNicTransformations } from "./scripts/fetch-nic-transformations.js";
+import { run as fetchCreditUnions } from "./scripts/fetch-ncua-credit-unions.js";
 import { uploadAll } from "./upload.js";
 
 async function pipeline() {
@@ -19,6 +20,7 @@ async function pipeline() {
     fetchNicAttributes(),
     fetchNicRelationships(),
     fetchNicTransformations(),
+    fetchCreditUnions(),
   ]);
 
   console.log("[pipeline] All fetches complete. Uploading...");

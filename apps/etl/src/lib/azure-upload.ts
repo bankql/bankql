@@ -27,7 +27,16 @@ export async function uploadDatasetBlobs(datasets: DatasetDef[]): Promise<void> 
   for (const dataset of datasets) {
     const root = datasetRoot(dataset);
     const localPath = path.join(config.outputDir, `${dataset.name}.parquet`);
-    const data = await fs.readFile(localPath);
+    let data: Buffer;
+    try {
+      data = await fs.readFile(localPath);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code === "ENOENT") {
+        console.log(`[upload] SKIP ${dataset.name} — ${localPath} not present`);
+        continue;
+      }
+      throw err;
+    }
 
     const targets = [
       `${root}/${datestamp}/${dataset.name}.parquet`,

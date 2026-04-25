@@ -13,6 +13,7 @@
     "fetch:nic-attributes": "tsx src/scripts/fetch-nic-attributes.ts",
     "fetch:nic-relationships": "tsx src/scripts/fetch-nic-relationships.ts",
     "fetch:nic-transformations": "tsx src/scripts/fetch-nic-transformations.ts",
+    "fetch:ncua-credit-unions": "tsx src/scripts/fetch-ncua-credit-unions.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
