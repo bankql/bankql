@@ -13,6 +13,16 @@ const BASE_URL =
   import.meta.env.VITE_DATASET_BASE_URL ??
   "https://bankqlstorage.blob.core.windows.net/bankql-datasets";
 
+// Datasets whose parquets are not yet published to blob storage.
+// Remove from this set as each ETL comes online. See apps/etl/CLAUDE.md
+// "Known Issues" for the current status of each source.
+const UNPUBLISHED = new Set([
+  "sod",
+  "nic_attributes",
+  "nic_relationships",
+  "nic_transformations",
+]);
+
 interface ServerManifest {
   name: string;
   schemaHash: string;
@@ -39,14 +49,15 @@ export function bootstrapData(): Promise<void> {
 
 async function run(): Promise<void> {
   try {
-    await initTables(allDatasets as unknown as DatasetDef[]);
-    const results = await Promise.allSettled(
-      (allDatasets as unknown as DatasetDef[]).map(loadDataset),
+    const active = (allDatasets as unknown as DatasetDef[]).filter(
+      (d) => !UNPUBLISHED.has(d.name),
     );
+    await initTables(active);
+    const results = await Promise.allSettled(active.map(loadDataset));
     results.forEach((r, i) => {
       if (r.status === "rejected") {
         console.warn(
-          `Dataset "${allDatasets[i].name}" failed to load:`,
+          `Dataset "${active[i].name}" failed to load:`,
           r.reason,
         );
       }

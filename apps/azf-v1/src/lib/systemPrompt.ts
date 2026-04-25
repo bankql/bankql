@@ -1,23 +1,15 @@
 import {
+  credit_unions,
   events,
   institutions,
   locations,
-  nic_attributes,
-  nic_relationships,
-  nic_transformations,
-  sod,
   toLLMSystemPrompt,
 } from "@bankql/schema";
 
-const datasets = [
-  institutions,
-  locations,
-  events,
-  sod,
-  nic_attributes,
-  nic_relationships,
-  nic_transformations,
-];
+// Only advertise datasets whose parquets are actually published + loadable
+// in the browser. Keep this list in sync with apps/web/app/lib/datasets.ts
+// `UNPUBLISHED`. See apps/etl/CLAUDE.md "Known Issues" for current status.
+const datasets = [institutions, locations, events, credit_unions];
 
 const OPERATOR_INSTRUCTIONS = `You are a data analyst assistant for BankQL, an app that exposes FDIC and NIC banking datasets through DuckDB.
 
