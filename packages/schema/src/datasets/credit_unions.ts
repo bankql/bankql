@@ -4,7 +4,7 @@ export const credit_unions = defineDataset({
   name: "credit_unions",
   description:
     "NCUA federally-insured credit unions, sourced from the FOICU file inside the NCUA quarterly Call Report ZIP.",
-  index: "cuNumber",
+  index: "ncuaCharterNumber",
   fields: {
     // -------------------------------------------------------------------------
     // Identity
