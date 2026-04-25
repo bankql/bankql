@@ -1,5 +1,10 @@
 import type { DatasetDef } from "@bankql/schema";
-import { allDatasets, hashDataset, toDuckDBCreateTable } from "@bankql/schema";
+import {
+  allDatasets,
+  depositoryInstitutionsViewSql,
+  hashDataset,
+  toDuckDBCreateTable,
+} from "@bankql/schema";
 import { getDB } from "~/lib/duckdb";
 import {
   readCache,
@@ -53,6 +58,7 @@ async function run(): Promise<void> {
       (d) => !UNPUBLISHED.has(d.name),
     );
     await initTables(active);
+    await createViews(active);
     const results = await Promise.allSettled(active.map(loadDataset));
     results.forEach((r, i) => {
       if (r.status === "rejected") {
@@ -76,6 +82,22 @@ async function initTables(datasets: DatasetDef[]): Promise<void> {
     for (const dataset of datasets) {
       await conn.query(toDuckDBCreateTable(dataset, { ifNotExists: true }));
     }
+  } finally {
+    await conn.close();
+  }
+}
+
+// SQL views depend on multiple base tables. Only create when all required
+// tables exist — otherwise the view DDL fails with a catalog error and
+// blocks bootstrap.
+async function createViews(active: DatasetDef[]): Promise<void> {
+  const names = new Set(active.map((d) => d.name));
+  if (!names.has("institutions") || !names.has("credit_unions")) return;
+
+  const db = await getDB();
+  const conn = await db.connect();
+  try {
+    await conn.query(depositoryInstitutionsViewSql);
   } finally {
     await conn.close();
   }

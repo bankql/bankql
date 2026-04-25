@@ -1,5 +1,6 @@
 import {
   credit_unions,
+  depositoryInstitutionsView,
   events,
   institutions,
   locations,
@@ -9,7 +10,16 @@ import {
 // Only advertise datasets whose parquets are actually published + loadable
 // in the browser. Keep this list in sync with apps/web/app/lib/datasets.ts
 // `UNPUBLISHED`. See apps/etl/CLAUDE.md "Known Issues" for current status.
-const datasets = [institutions, locations, events, credit_unions];
+// `depository_institutions` is a DuckDB view over institutions + credit_unions
+// — created in the browser, not parquet-backed, but the agent should know it
+// exists as a cross-type convenience.
+const datasets = [
+  institutions,
+  locations,
+  events,
+  credit_unions,
+  depositoryInstitutionsView,
+];
 
 const OPERATOR_INSTRUCTIONS = `You are a data analyst assistant for BankQL, an app that exposes FDIC and NIC banking datasets through DuckDB.
 

@@ -6,6 +6,10 @@
 // Re-export all dataset definitions
 export * from "./datasets/index.js";
 
+// Re-export SQL views — DatasetDef-shaped metadata + CREATE VIEW DDL.
+// Views are not included in `allDatasets` (not parquet-backed).
+export * from "./views/index.js";
+
 // Re-export core types for consumers who need them
 export type {
   PerspectiveType,
