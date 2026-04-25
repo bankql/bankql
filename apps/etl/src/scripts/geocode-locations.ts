@@ -22,7 +22,7 @@ export async function run() {
   await fs.mkdir(config.outputDir, { recursive: true });
   const outPath = path.join(config.outputDir, `${DATASET.name}.parquet`);
 
-  const existingParquet = await downloadExistingCoords();
+  const existingParquet = await loadExistingCoords(outPath);
 
   const db = await Database.create(":memory:");
   const conn = await db.connect();
@@ -134,7 +134,23 @@ function summarize(results: GeocodeResult[]): void {
   );
 }
 
-async function downloadExistingCoords(): Promise<string | null> {
+async function loadExistingCoords(outPath: string): Promise<string | null> {
+  const stagingPath = path.join(
+    config.tmpDir,
+    `${DATASET.name}-existing.parquet`,
+  );
+  await fs.mkdir(path.dirname(stagingPath), { recursive: true });
+
+  // Local cache takes precedence — it's at least as fresh as the last upload,
+  // and lets repeated `geocode:locations` runs short-circuit without an
+  // intervening `npm run upload`. We copy to a staging path because the run
+  // will COPY TO outPath and overwrite the source mid-query.
+  if (await pathExists(outPath)) {
+    console.log(`[geocode] Reusing local ${outPath} as cache`);
+    await fs.copyFile(outPath, stagingPath);
+    return stagingPath;
+  }
+
   let accountName: string;
   try {
     accountName = config.azure.accountName;
@@ -156,11 +172,18 @@ async function downloadExistingCoords(): Promise<string | null> {
     );
     return null;
   }
-  const tmpPath = path.join(config.tmpDir, `${DATASET.name}-existing.parquet`);
-  await fs.mkdir(path.dirname(tmpPath), { recursive: true });
   console.log(`[geocode] Downloading existing ${BLOB_PATH}...`);
-  await blob.downloadToFile(tmpPath);
-  return tmpPath;
+  await blob.downloadToFile(stagingPath);
+  return stagingPath;
+}
+
+async function pathExists(p: string): Promise<boolean> {
+  try {
+    await fs.access(p);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function assertExists(p: string, hint: string): Promise<void> {
