@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout.index'
+import { Route as LayoutAboutRouteImport } from './routes/_layout.about'
 import { Route as LayoutDatasetsNameRouteImport } from './routes/_layout.datasets.$name'
 
 const LayoutRoute = LayoutRouteImport.update({
@@ -22,6 +23,11 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutAboutRoute = LayoutAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutDatasetsNameRoute = LayoutDatasetsNameRouteImport.update({
   id: '/datasets/$name',
   path: '/datasets/$name',
@@ -30,24 +36,32 @@ const LayoutDatasetsNameRoute = LayoutDatasetsNameRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
+  '/about': typeof LayoutAboutRoute
   '/datasets/$name': typeof LayoutDatasetsNameRoute
 }
 export interface FileRoutesByTo {
+  '/about': typeof LayoutAboutRoute
   '/': typeof LayoutIndexRoute
   '/datasets/$name': typeof LayoutDatasetsNameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
+  '/_layout/about': typeof LayoutAboutRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/datasets/$name': typeof LayoutDatasetsNameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/datasets/$name'
+  fullPaths: '/' | '/about' | '/datasets/$name'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/datasets/$name'
-  id: '__root__' | '/_layout' | '/_layout/' | '/_layout/datasets/$name'
+  to: '/about' | '/' | '/datasets/$name'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/_layout/about'
+    | '/_layout/'
+    | '/_layout/datasets/$name'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -70,6 +84,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/about': {
+      id: '/_layout/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof LayoutAboutRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/datasets/$name': {
       id: '/_layout/datasets/$name'
       path: '/datasets/$name'
@@ -81,11 +102,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface LayoutRouteChildren {
+  LayoutAboutRoute: typeof LayoutAboutRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutDatasetsNameRoute: typeof LayoutDatasetsNameRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAboutRoute: LayoutAboutRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutDatasetsNameRoute: LayoutDatasetsNameRoute,
 }
