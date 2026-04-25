@@ -10,6 +10,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   LuChevronRight,
+  LuCircleHelp,
   LuDatabase,
   LuHouse,
   LuPanelLeftClose,
@@ -47,6 +48,12 @@ export default function Sidebar() {
         overflowY="auto"
       >
         <NavLink to="/" icon={<LuHouse />} label="Home" open={sidebar.open} />
+        <NavLink
+          to="/about"
+          icon={<LuCircleHelp />}
+          label="About"
+          open={sidebar.open}
+        />
 
         {sidebar.open ? (
           <>
