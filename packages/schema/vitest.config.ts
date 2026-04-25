@@ -13,6 +13,7 @@ export default defineConfig({
         "src/index.ts",
         "src/types.ts",
         "src/datasets/**",
+        "src/views/**",
         "src/agent/index.ts",
       ],
       all: true,
