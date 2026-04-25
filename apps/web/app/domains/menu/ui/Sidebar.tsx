@@ -16,10 +16,8 @@ import {
   LuPanelLeftOpen,
   LuTable,
 } from "react-icons/lu";
-import { allDatasets, type DatasetDef } from "@bankql/schema";
+import { publishedDatasets } from "~/lib/datasets";
 import { useLayout } from "~/domains/layout/hooks/useLayout";
-
-const datasetList = allDatasets as unknown as DatasetDef[];
 
 export default function Sidebar() {
   const { sidebar } = useLayout();
@@ -59,7 +57,7 @@ export default function Sidebar() {
               onToggle={() => setDatasetsExpanded((v) => !v)}
             />
             {datasetsExpanded &&
-              datasetList.map((d) => (
+              publishedDatasets.map((d) => (
                 <NavLink
                   key={d.name}
                   to="/datasets/$name"

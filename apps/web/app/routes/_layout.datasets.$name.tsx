@@ -1,12 +1,10 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { allDatasets, type DatasetDef } from "@bankql/schema";
 import DatasetPage from "~/domains/datasets/ui/DatasetPage";
+import { publishedDatasets } from "~/lib/datasets";
 
 export const Route = createFileRoute("/_layout/datasets/$name")({
   loader: ({ params }) => {
-    const dataset = (allDatasets as unknown as DatasetDef[]).find(
-      (d) => d.name === params.name,
-    );
+    const dataset = publishedDatasets.find((d) => d.name === params.name);
     if (!dataset) throw notFound();
     return { dataset };
   },
