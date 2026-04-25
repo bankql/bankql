@@ -1,11 +1,12 @@
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
+import { LuTrash2 } from "react-icons/lu";
 import Composer from "~/domains/agent/ui/Composer";
 import MessageList from "~/domains/agent/ui/MessageList";
 import { useAgent } from "~/domains/agent/hooks/useAgent";
 
 export default function ChatPanel() {
-  const { messages, sendMessage, isLoading } = useAgent();
+  const { messages, sendMessage, isLoading, clear } = useAgent();
   const [input, setInput] = useState("");
 
   const onSubmit = useCallback(async () => {
@@ -17,6 +18,19 @@ export default function ChatPanel() {
 
   return (
     <Stack direction="column" h="full" w="full" gap="0">
+      {messages.length > 0 && (
+        <Flex direction="row" justify="flex-end" px="2" py="1" borderBottomWidth="1px">
+          <IconButton
+            aria-label="Clear conversation"
+            variant="ghost"
+            size="xs"
+            onClick={clear}
+            disabled={isLoading}
+          >
+            <LuTrash2 />
+          </IconButton>
+        </Flex>
+      )}
       <Box flex="1" overflow="auto" p="4">
         {messages.length === 0 ? (
           <EmptyState />
