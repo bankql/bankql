@@ -49,6 +49,7 @@ function LayoutShell({ children }: { children: React.ReactNode }) {
         gap="2"
         flexShrink="0"
         borderBottomWidth="1px"
+        hideBelow="md"
       >
         <IconButton
           aria-label="Toggle menu"
@@ -89,7 +90,9 @@ function LayoutShell({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <Flex direction="row" flex="1" minH="0">
-        <Sidebar />
+        <Box hideBelow="md" h="full">
+          <Sidebar />
+        </Box>
 
         <Splitter.Root
           flex="1"
