@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import {
   institutions,
   locations,
+  location_coordinates,
   events,
   sod,
   nic_attributes,
@@ -14,6 +15,7 @@ import { uploadDatasetBlobs } from "./lib/azure-upload.js";
 const ALL_DATASETS = [
   institutions,
   locations,
+  location_coordinates,
   events,
   sod,
   nic_attributes,
