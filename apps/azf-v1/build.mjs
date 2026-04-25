@@ -7,6 +7,7 @@ import { rm, mkdir, writeFile, copyFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const deployDir = resolve(here, "deploy");
@@ -60,5 +61,18 @@ await copyFile(
   resolve(here, "host.json"),
   resolve(deployDir, "host.json"),
 );
+
+// Flex Consumption runs the deploy zip as-is — there is no remote `npm install`.
+// The bundle leaves `@azure/functions` external (the host injects its own
+// instance), so the SDK package must be present in deploy/node_modules or the
+// entry module fails to load and zero functions register (every /api/* 404s).
+const npm = spawnSync(
+  process.platform === "win32" ? "npm.cmd" : "npm",
+  ["install", "--omit=dev", "--no-audit", "--no-fund", "--no-package-lock"],
+  { cwd: deployDir, stdio: "inherit" },
+);
+if (npm.status !== 0) {
+  process.exit(npm.status ?? 1);
+}
 
 console.log(`Deploy package ready at ${deployDir}`);
