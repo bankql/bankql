@@ -1,5 +1,6 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import type { DatasetDef, FieldDef } from "@bankql/schema";
+import { useNavigate } from "@tanstack/react-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   createColumnHelper,
@@ -19,6 +20,7 @@ type Row = Record<string, unknown>;
 
 export default function DatasetTable({ dataset }: { dataset: DatasetDef }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const fieldKeys = useMemo(() => Object.keys(dataset.fields), [dataset]);
 
@@ -156,6 +158,10 @@ export default function DatasetTable({ dataset }: { dataset: DatasetDef }) {
         >
           {virtualItems.map((virtualRow) => {
             const row = table.getRowModel().rows[virtualRow.index];
+            const indexField = dataset.index;
+            const pk = indexField ? row.original[indexField] : null;
+            const pkStr =
+              pk === null || pk === undefined ? null : String(pk);
             return (
               <Flex
                 key={virtualRow.key}
@@ -167,7 +173,17 @@ export default function DatasetTable({ dataset }: { dataset: DatasetDef }) {
                 h={`${virtualRow.size}px`}
                 transform={`translateY(${virtualRow.start}px)`}
                 borderBottomWidth="1px"
+                cursor={pkStr ? "pointer" : undefined}
                 _hover={{ bg: "bg.subtle" }}
+                onClick={
+                  pkStr
+                    ? () =>
+                        navigate({
+                          to: "/datasets/$name/$id",
+                          params: { name: dataset.name, id: pkStr },
+                        })
+                    : undefined
+                }
               >
                 {row.getVisibleCells().map((cell) => (
                   <Box
