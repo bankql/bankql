@@ -1,5 +1,5 @@
 import type { DatasetDef } from "@bankql/schema";
-import { allDatasets, toDuckDBCreateTable } from "@bankql/schema";
+import { allDatasets, hashDataset, toDuckDBCreateTable } from "@bankql/schema";
 import { getDB } from "~/lib/duckdb";
 import {
   readCache,
@@ -12,6 +12,14 @@ import {
 const BASE_URL =
   import.meta.env.VITE_DATASET_BASE_URL ??
   "https://bankqlstorage.blob.core.windows.net/bankql-datasets";
+
+interface ServerManifest {
+  name: string;
+  schemaHash: string;
+  schemaHashShort: string;
+  size: number;
+  uploadedAt: string;
+}
 
 let resolveDataReady!: () => void;
 let rejectDataReady!: (err: unknown) => void;
@@ -66,12 +74,26 @@ function datasetUrl(name: string): string {
   return `${BASE_URL}/datasets/${name}/latest/${name}.parquet`;
 }
 
+function manifestUrl(name: string): string {
+  return `${BASE_URL}/datasets/${name}/latest/manifest.json`;
+}
+
 async function fetchParquet(name: string): Promise<Uint8Array> {
   const res = await fetch(datasetUrl(name));
   if (!res.ok) {
     throw new Error(`Failed to fetch ${name}.parquet: ${res.status}`);
   }
   return new Uint8Array(await res.arrayBuffer());
+}
+
+async function fetchManifest(name: string): Promise<ServerManifest | null> {
+  try {
+    const res = await fetch(manifestUrl(name), { cache: "no-store" });
+    if (!res.ok) return null;
+    return (await res.json()) as ServerManifest;
+  } catch {
+    return null;
+  }
 }
 
 async function loadIntoTable(
@@ -109,31 +131,47 @@ async function loadIntoTable(
 async function loadDataset(dataset: DatasetDef): Promise<void> {
   const { name } = dataset;
   const t0 = performance.now();
+  const expected = await hashDataset(dataset);
 
   const meta = await readMeta(name);
   if (meta) {
-    const cached = await readCache(name);
-    if (cached) {
-      try {
-        const rows = await loadIntoTable(dataset, cached);
-        if (rows === 0) {
-          console.warn(`OPFS: ${name} cache produced 0 rows, refetching`);
-          await deleteEntry(name);
-        } else {
-          const sizeMB = (cached.byteLength / 1024 / 1024).toFixed(2);
-          console.log(
-            `DuckDB: ${name} — ${rows} rows (${sizeMB}MB) — OPFS cache in ${(performance.now() - t0).toFixed(0)}ms`,
-          );
-          if (!isFresh(meta)) {
-            refreshInBackground(dataset).catch(() => {});
+    if (meta.schemaHash !== expected.hash) {
+      console.log(
+        `OPFS: ${name} schema hash changed (cache ${meta.schemaHash.slice(0, 8)} → client ${expected.short}), evicting`,
+      );
+      await deleteEntry(name);
+    } else {
+      const cached = await readCache(name);
+      if (cached) {
+        try {
+          const rows = await loadIntoTable(dataset, cached);
+          if (rows === 0) {
+            console.warn(`OPFS: ${name} cache produced 0 rows, refetching`);
+            await deleteEntry(name);
+          } else {
+            const sizeMB = (cached.byteLength / 1024 / 1024).toFixed(2);
+            console.log(
+              `DuckDB: ${name} — ${rows} rows (${sizeMB}MB) — OPFS cache in ${(performance.now() - t0).toFixed(0)}ms`,
+            );
+            if (!isFresh(meta)) {
+              refreshInBackground(dataset, expected.hash).catch(() => {});
+            }
+            return;
           }
-          return;
+        } catch (err) {
+          console.warn(`OPFS: ${name} cache corrupt, refetching`, err);
+          await deleteEntry(name);
         }
-      } catch (err) {
-        console.warn(`OPFS: ${name} cache corrupt, refetching`, err);
-        await deleteEntry(name);
       }
     }
+  }
+
+  const manifest = await fetchManifest(name);
+  if (manifest && manifest.schemaHash !== expected.hash) {
+    console.warn(
+      `Dataset "${name}" schema drift: client ${expected.short} vs published ${manifest.schemaHashShort}. Skipping load — run ETL to republish.`,
+    );
+    return;
   }
 
   const buffer = await fetchParquet(name);
@@ -142,17 +180,27 @@ async function loadDataset(dataset: DatasetDef): Promise<void> {
   console.log(
     `DuckDB: ${name} — ${rows} rows (${sizeMB}MB) — from blob in ${(performance.now() - t0).toFixed(0)}ms`,
   );
-  writeCache(name, buffer).catch((err) =>
+  writeCache(name, buffer, expected.hash).catch((err) =>
     console.warn(`OPFS: failed to cache ${name}`, err),
   );
 }
 
-async function refreshInBackground(dataset: DatasetDef): Promise<void> {
+async function refreshInBackground(
+  dataset: DatasetDef,
+  schemaHash: string,
+): Promise<void> {
   const { name } = dataset;
   try {
+    const manifest = await fetchManifest(name);
+    if (manifest && manifest.schemaHash !== schemaHash) {
+      console.warn(
+        `Dataset "${name}" — background refresh skipped, server hash ${manifest.schemaHashShort} does not match client`,
+      );
+      return;
+    }
     const buffer = await fetchParquet(name);
     await loadIntoTable(dataset, buffer);
-    await writeCache(name, buffer);
+    await writeCache(name, buffer, schemaHash);
     console.log(`DuckDB: ${name} — background refresh done`);
   } catch (err) {
     console.warn(`DuckDB: ${name} — background refresh failed`, err);

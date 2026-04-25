@@ -6,7 +6,9 @@
 
 This package is the single source of truth that drives the entire stack. It contains two complementary systems:
 
-### 1. DatasetDef Definitions (`src/datasets/`) — 7 datasets
+> **Changing a DatasetDef?** See `.claude/rules/dataset-schema-hash.md`. Every edit must round-trip through the hash-based cache-invalidation pipeline (ETL manifest → web bootstrap → OPFS cache). Skipping the re-upload step leaves the web app refusing to load the stale parquet.
+
+### 1. DatasetDef Definitions (`src/datasets/`) — 8 datasets
 
 A `DatasetDef` is a rich metadata object encoding column types, display formats, measurement semantics, and foreign-key relationships. From one definition, the codebase derives:
 

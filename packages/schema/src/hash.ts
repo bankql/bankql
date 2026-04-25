@@ -9,13 +9,10 @@
  *   dataset: name, index
  *   per field: type, measure, format, enumValues, relation
  *
- * Usage:
- *   const { hash, short } = hashDataset(institutions);
- *   // hash  → full 64-char hex SHA-256
- *   // short → first 8 chars, suitable for display / filenames
+ * Uses the Web Crypto API so the same implementation runs in both Node
+ * (>=20) and modern browsers.
  */
 
-import { createHash } from "node:crypto";
 import type { DatasetDef, FieldDef } from "./types.js";
 
 interface FieldFingerprint {
@@ -32,7 +29,6 @@ interface DatasetFingerprint {
   fields: Record<string, FieldFingerprint>;
 }
 
-/** Build a deterministic, documentation-free fingerprint of a DatasetDef. */
 function fingerprint(dataset: DatasetDef): DatasetFingerprint {
   const fields: Record<string, FieldFingerprint> = {};
 
@@ -66,36 +62,39 @@ export interface SchemaHash {
   short: string;
 }
 
-/** Compute the structural hash of a single DatasetDef. */
-export function hashDataset(dataset: DatasetDef): SchemaHash {
-  const fp = fingerprint(dataset);
-  const json = JSON.stringify(fp);
-  const hash = createHash("sha256").update(json).digest("hex");
+function toHex(buffer: ArrayBuffer): string {
+  return Array.from(new Uint8Array(buffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+export async function hashDataset(dataset: DatasetDef): Promise<SchemaHash> {
+  const json = JSON.stringify(fingerprint(dataset));
+  const bytes = new TextEncoder().encode(json);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const hash = toHex(digest);
   return { hash, short: hash.slice(0, 8) };
 }
 
-/** Compute hashes for multiple datasets, keyed by dataset name. */
-export function hashDatasets(
+export async function hashDatasets(
   datasets: DatasetDef[],
-): Record<string, SchemaHash> {
-  return Object.fromEntries(
-    datasets.map((ds) => [ds.name, hashDataset(ds)]),
+): Promise<Record<string, SchemaHash>> {
+  const entries = await Promise.all(
+    datasets.map(async (ds) => [ds.name, await hashDataset(ds)] as const),
   );
+  return Object.fromEntries(entries);
 }
 
 /**
  * Assert that a dataset matches an expected hash.
  * Throws if the hash has changed — useful in tests or startup checks
  * to catch accidental schema drift.
- *
- * @example
- *   assertDatasetHash(institutions, "a3f2c1b0");
  */
-export function assertDatasetHash(
+export async function assertDatasetHash(
   dataset: DatasetDef,
   expectedShort: string,
-): void {
-  const { short, hash } = hashDataset(dataset);
+): Promise<void> {
+  const { short, hash } = await hashDataset(dataset);
   if (short !== expectedShort) {
     throw new Error(
       `Schema drift detected for dataset "${dataset.name}": ` +

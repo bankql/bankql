@@ -4,6 +4,7 @@ const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000;
 export interface CacheMeta {
   cachedAt: number;
   size: number;
+  schemaHash: string;
 }
 
 let opfsSupported: boolean | null = null;
@@ -86,11 +87,16 @@ export async function readMeta(name: string): Promise<CacheMeta | null> {
 export async function writeCache(
   name: string,
   buffer: Uint8Array,
+  schemaHash: string,
 ): Promise<void> {
   if (!(await isOPFSAvailable())) return;
   try {
     const dir = await getCacheDir();
-    const meta: CacheMeta = { cachedAt: Date.now(), size: buffer.byteLength };
+    const meta: CacheMeta = {
+      cachedAt: Date.now(),
+      size: buffer.byteLength,
+      schemaHash,
+    };
     await writeFile(dir, dataFile(name), buffer);
     await writeFile(dir, metaFile(name), JSON.stringify(meta));
   } catch (err) {
