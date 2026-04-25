@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/staticwebapp.config.json",
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/api/*", "*.{js,css,wasm,map,png,svg,ico,json,woff2,txt}"]
+  },
+  "globalHeaders": {
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Embedder-Policy": "require-corp"
+  },
+  "mimeTypes": {
+    ".wasm": "application/wasm"
+  }
+}

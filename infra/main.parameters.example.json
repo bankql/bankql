@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "baseName": { "value": "bankql" },
+    "location": { "value": "eastus2" },
+    "swaLocation": { "value": "eastus2" },
+    "foundryEndpoint": {
+      "value": "https://<resource>.openai.azure.com/anthropic"
+    },
+    "foundryModel": { "value": "claude-sonnet-4-6-1" },
+    "foundryApiVersion": { "value": "2023-06-01" },
+    "foundryApiKey": { "value": "<fill-me-in-or-use-KeyVault-reference>" }
+  }
+}

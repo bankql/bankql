@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "bundle": "node build.mjs",
     "dev": "npm run build && func start --port 7072",
     "watch": "tsc --watch",
     "typecheck": "tsc --noEmit"
@@ -19,6 +20,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "esbuild": "^0.25.12",
     "typescript": "^5.7.2"
   },
   "engines": {

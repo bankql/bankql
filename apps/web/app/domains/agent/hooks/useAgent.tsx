@@ -13,7 +13,8 @@ import { getVisitorId } from "~/lib/visitor";
 const tools = clientTools(queryDataClient);
 
 const CHAT_URL =
-  import.meta.env.VITE_CHAT_URL ?? "http://localhost:7072/api/chat";
+  import.meta.env.VITE_CHAT_URL ??
+  (import.meta.env.DEV ? "http://localhost:7072/api/chat" : "/api/chat");
 
 const HISTORY_VERSION = "v1";
 const historyKey = (visitorId: string) =>
