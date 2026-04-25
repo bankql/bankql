@@ -23,6 +23,6 @@ import { institutions } from "@bankql/schema";
 // Get column metadata for a dataset
 const cols = datasetToColumns(institutions);
 
-// Run a query (db comes from useDuckDB() or wherever)
+// Run a query (db comes from getDB() in ~/lib/duckdb)
 const rows = await queryDuckDb(db, "SELECT * FROM institutions LIMIT 10");
 ```
