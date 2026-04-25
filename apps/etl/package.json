@@ -8,6 +8,7 @@
     "upload": "tsx src/upload.ts",
     "fetch:institutions": "tsx src/scripts/fetch-fdic-institutions.ts",
     "fetch:locations": "tsx src/scripts/fetch-fdic-locations.ts",
+    "geocode:locations": "tsx src/scripts/geocode-locations.ts",
     "fetch:events": "tsx src/scripts/fetch-fdic-events.ts",
     "fetch:sod": "tsx src/scripts/fetch-fdic-sod.ts",
     "fetch:nic-attributes": "tsx src/scripts/fetch-nic-attributes.ts",

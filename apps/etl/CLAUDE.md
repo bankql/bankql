@@ -77,12 +77,32 @@ The FDIC bulk ZIP URL (`banks.data.fdic.gov/bulk/fdic_bulk__Summary_Of_Deposits.
 ### NCUA credit unions — fetch:ncua-credit-unions
 Pulls the quarterly Call Report ZIP from `ncua.gov/files/publications/analysis/call-report-data-YYYY-MM.zip` and extracts `FOICU.txt` (the roster). The URL is pinned to `2025-12` — bump the constant in `scripts/fetch-ncua-credit-unions.ts` as newer quarters drop (MM ∈ {03, 06, 09, 12}). Only the roster is ingested today; financial line items (`FS220*.txt`) and branch info live in the same ZIP and are follow-up work.
 
+## Geocoding (location_coordinates)
+
+The `location_coordinates` dataset stores Census-geocoded lat/lng for FDIC branch offices, joined to `locations` on `uninum`. It is decoupled from `fetch:locations` so the weekly locations refresh does not re-geocode addresses we've already resolved.
+
+```bash
+npm run geocode:locations    # standalone — requires fetch:locations to have run
+```
+
+Pipeline integration: `pipeline.ts` runs `geocode:locations` after all fetches complete, before `uploadAll()`. Failures in geocoding are logged but do not abort the upload — Census downtime should not block the rest of the pipeline.
+
+How the diff/merge works:
+1. Downloads existing `location_coordinates.parquet` from `datasets/location_coordinates/latest/` if present (cache).
+2. Reads `/tmp/etl/output/locations.parquet` (written by `fetch:locations`).
+3. `LEFT JOIN` finds branches without an existing geocode → batches them in 9k chunks against the [Census batch addressbatch endpoint](https://geocoding.geo.census.gov/geocoder/locations/addressbatch). No API key required.
+4. Stores `geocodeQuality ∈ {exact, non_exact, tie, no_match}` and `geocodedAddress` so retries are skipped on subsequent runs (including for `no_match` rows — Census already said no).
+5. Writes the merged parquet to `/tmp/etl/output/location_coordinates.parquet`.
+
+After the first successful run uploads the parquet, remove `location_coordinates` from the `UNPUBLISHED` set in `apps/web/app/lib/datasets.ts` and add it to the `datasets` list in `apps/azf-v1/src/lib/systemPrompt.ts` so the agent can JOIN branch coords.
+
 ## Working Datasets (confirmed)
 
 | Dataset | Rows | Status |
 |---|---|---|
 | institutions | 27,832 | ✓ uploaded |
 | locations | — | ✓ uploaded |
+| location_coordinates | — | ⏳ pending first run |
 | events | 581,970 | ✓ uploaded |
 | sod | — | ✗ broken URL |
 | nic_attributes | — | ✗ Cloudflare block |

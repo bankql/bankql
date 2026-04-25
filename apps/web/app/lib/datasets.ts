@@ -30,6 +30,11 @@ const UNPUBLISHED = new Set([
   "nic_attributes",
   "nic_relationships",
   "nic_transformations",
+  // location_coordinates parquet is published by the new geocode ETL step.
+  // Remove this entry once the first `npm run pipeline` has uploaded it,
+  // and add `location_coordinates` to apps/azf-v1/src/lib/systemPrompt.ts so
+  // the agent can join branch coords against `locations` on uninum.
+  "location_coordinates",
 ]);
 
 export function isDatasetPublished(name: string): boolean {
