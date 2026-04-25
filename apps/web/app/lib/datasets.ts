@@ -136,8 +136,11 @@ async function loadDataset(dataset: DatasetDef): Promise<void> {
   const meta = await readMeta(name);
   if (meta) {
     if (meta.schemaHash !== expected.hash) {
+      const cacheLabel = meta.schemaHash
+        ? meta.schemaHash.slice(0, 8)
+        : "legacy";
       console.log(
-        `OPFS: ${name} schema hash changed (cache ${meta.schemaHash.slice(0, 8)} → client ${expected.short}), evicting`,
+        `OPFS: ${name} schema hash changed (cache ${cacheLabel} → client ${expected.short}), evicting`,
       );
       await deleteEntry(name);
     } else {
