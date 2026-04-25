@@ -9,43 +9,51 @@ export const credit_unions = defineDataset({
     // -------------------------------------------------------------------------
     // Identity
     // -------------------------------------------------------------------------
-    cuNumber: defineField({
+    ncuaCharterNumber: defineField({
       type: "integer",
+      label: "NCUA Charter Number",
       description: "NCUA charter number.",
       measure: "nominal",
       format: "id",
       sourceKey: "CU_NUMBER",
     }),
-    cycleDate: defineField({
+    callReportCycleEndDate: defineField({
       type: "date",
-      description: "Call report cycle end date (March, June, September, or December).",
+      label: "Call Report Cycle End Date",
+      description:
+        "Call report cycle end date (March, June, September, or December).",
       measure: "temporal",
       format: "date",
       sourceKey: "CYCLE_DATE",
     }),
-    joinNumber: defineField({
+    ncuaInternalJoinNumber: defineField({
       type: "integer",
+      label: "NCUA Internal Join Number",
       description: "NCUA internal join number for the credit union.",
       measure: "nominal",
       format: "id",
       sourceKey: "JOIN_NUMBER",
     }),
-    rssd: defineField({
+    rssdId: defineField({
       type: "string",
-      description: "Federal Reserve RSSD ID — unique institution identifier assigned by the Federal Reserve.",
+      label: "RSSD ID",
+      description:
+        "Federal Reserve RSSD ID — unique institution identifier assigned by the Federal Reserve.",
       measure: "nominal",
       format: "id",
       sourceKey: "RSSD",
     }),
-    cuType: defineField({
+    creditUnionType: defineField({
       type: "string",
+      label: "Credit Union Type",
       description: "Credit union type code (e.g. federal vs state charter).",
       measure: "nominal",
       format: "enum",
       sourceKey: "CU_TYPE",
     }),
-    cuName: defineField({
+    creditUnionName: defineField({
       type: "string",
+      label: "Credit Union Name",
       description: "Credit union name.",
       measure: "nominal",
       format: "text",
@@ -57,6 +65,7 @@ export const credit_unions = defineDataset({
     // -------------------------------------------------------------------------
     city: defineField({
       type: "string",
+      label: "City",
       description: "Mailing address city.",
       measure: "nominal",
       format: "text",
@@ -64,6 +73,7 @@ export const credit_unions = defineDataset({
     }),
     state: defineField({
       type: "string",
+      label: "State",
       description: "Mailing address state (two-letter abbreviation).",
       measure: "nominal",
       format: "text",
@@ -71,6 +81,7 @@ export const credit_unions = defineDataset({
     }),
     charterState: defineField({
       type: "string",
+      label: "Charter State",
       description: "State in which the credit union was chartered.",
       measure: "nominal",
       format: "text",
@@ -78,6 +89,7 @@ export const credit_unions = defineDataset({
     }),
     stateCode: defineField({
       type: "integer",
+      label: "FIPS State Code",
       description: "FIPS state code.",
       measure: "nominal",
       format: "id",
@@ -85,6 +97,7 @@ export const credit_unions = defineDataset({
     }),
     zipCode: defineField({
       type: "string",
+      label: "ZIP Code",
       description: "Mailing address ZIP code.",
       measure: "nominal",
       format: "text",
@@ -92,6 +105,7 @@ export const credit_unions = defineDataset({
     }),
     countyCode: defineField({
       type: "integer",
+      label: "FIPS County Code",
       description: "FIPS county code.",
       measure: "nominal",
       format: "id",
@@ -99,20 +113,23 @@ export const credit_unions = defineDataset({
     }),
     congressionalDistrict: defineField({
       type: "integer",
+      label: "Congressional District",
       description: "Congressional district (Congressional Atlas).",
       measure: "nominal",
       format: "id",
       sourceKey: "CONG_DIST",
     }),
-    smsa: defineField({
+    standardMetropolitanStatisticalAreaCode: defineField({
       type: "integer",
+      label: "SMSA Code",
       description: "Standard Metropolitan Statistical Area code.",
       measure: "nominal",
       format: "id",
       sourceKey: "SMSA",
     }),
-    attentionOf: defineField({
+    mailingAttentionLine: defineField({
       type: "string",
+      label: "Mailing Attention Line",
       description: "Mailing attention line.",
       measure: "nominal",
       format: "text",
@@ -120,6 +137,7 @@ export const credit_unions = defineDataset({
     }),
     street: defineField({
       type: "string",
+      label: "Street",
       description: "Mailing address street.",
       measure: "nominal",
       format: "text",
@@ -129,23 +147,26 @@ export const credit_unions = defineDataset({
     // -------------------------------------------------------------------------
     // Supervision
     // -------------------------------------------------------------------------
-    region: defineField({
+    ncuaRegionCode: defineField({
       type: "string",
+      label: "NCUA Region Code",
       description:
         "NCUA region code. 1=Albany, 2=Capital, 3=Atlanta, 4=Austin, 5=Tempe.",
       measure: "nominal",
       format: "enum",
       sourceKey: "REGION",
     }),
-    se: defineField({
+    ncuaSupervisoryExaminerCode: defineField({
       type: "string",
+      label: "NCUA Supervisory Examiner Code",
       description: "NCUA SE (supervisory examiner) code.",
       measure: "nominal",
       format: "enum",
       sourceKey: "SE",
     }),
-    district: defineField({
+    ncuaDistrict: defineField({
       type: "integer",
+      label: "NCUA District",
       description: "NCUA district.",
       measure: "nominal",
       format: "id",
@@ -155,8 +176,9 @@ export const credit_unions = defineDataset({
     // -------------------------------------------------------------------------
     // Charter attributes
     // -------------------------------------------------------------------------
-    yearOpened: defineField({
+    creditUnionYearOpened: defineField({
       type: "integer",
+      label: "Year Opened",
       description: "Year the credit union was organized.",
       measure: "temporal",
       format: "count",
@@ -164,27 +186,31 @@ export const credit_unions = defineDataset({
     }),
     tomCode: defineField({
       type: "string",
+      label: "Field of Membership (TOM) Code",
       description: "Field of membership (TOM) code.",
       measure: "nominal",
       format: "enum",
       sourceKey: "TOM_CODE",
     }),
-    limitedIncome: defineField({
+    isDesignatedLowIncome: defineField({
       type: "integer",
+      label: "Low-Income Designation",
       description: "Low-income designation flag.",
       measure: "nominal",
       format: "boolean",
       sourceKey: "LIMITED_INC",
     }),
-    issueDate: defineField({
+    creditUnionCharterIssueDate: defineField({
       type: "date",
+      label: "Charter Issue Date",
       description: "Date the credit union's charter was issued.",
       measure: "temporal",
       format: "date",
       sourceKey: "ISSUE_DATE",
     }),
-    peerGroup: defineField({
+    ncuaPeerGroup: defineField({
       type: "integer",
+      label: "NCUA Peer Group",
       description:
         "NCUA peer group by asset size. 1: <$2M; 2: $2–10M; 3: $10–50M; 4: $50–100M; 5: $100–500M; 6: ≥$500M.",
       measure: "nominal",
@@ -194,27 +220,33 @@ export const credit_unions = defineDataset({
     }),
     quarterFlag: defineField({
       type: "integer",
-      description: "Quarter flag (legacy, not used by NCUA).",
+      label: "Quarter Flag",
+      description:
+        "Legacy field; NCUA stopped populating it. Historical values may exist but new records are null.",
       measure: "nominal",
       format: "enum",
       sourceKey: "Quarter_Flag",
+      isDeprecated: true,
     }),
     isMinorityDepositoryInstitution: defineField({
       type: "boolean",
+      label: "Minority Depository Institution",
       description: "Minority Depository Institution flag.",
       measure: "nominal",
       format: "boolean",
       sourceKey: "IsMDI",
     }),
-    insuredDate: defineField({
+    ncuaFirstInsuredDate: defineField({
       type: "date",
+      label: "NCUA First Insured Date",
       description: "Date first insured by NCUA.",
       measure: "temporal",
       format: "date",
       sourceKey: "INSURED_DATE",
     }),
-    annualMeetingDate: defineField({
+    creditUnionAnnualMeetingDate: defineField({
       type: "date",
+      label: "Annual Meeting Date",
       description: "Date of the credit union's annual meeting.",
       measure: "temporal",
       format: "date",

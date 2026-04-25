@@ -47,6 +47,9 @@ export interface Relation {
 /** Rich metadata for a single column/field. */
 export interface FieldDef<T extends PerspectiveType = PerspectiveType> {
   type: T;
+  /** Human-readable display name (e.g. "FDIC Certificate Number"). UI uses this
+   *  as the column header; acronyms should be preserved (NCUA, RSSD, SOD, MSA). */
+  label: string;
   description?: string;
   measure?: Measure;
   format?: Format;
@@ -58,6 +61,9 @@ export interface FieldDef<T extends PerspectiveType = PerspectiveType> {
   /** Original column name in the source data (FDIC CSV header, API field, NIC column).
    *  ETL uses this to map source → human-readable key during CSV staging. */
   sourceKey?: string;
+  /** Marks a field as obsolete — still present in the data, but UI and LLM
+   *  surfaces should downrank or omit it. Does not affect the schema hash. */
+  isDeprecated?: boolean;
 }
 
 /** A dataset definition: name, metadata, index column, and field map. */

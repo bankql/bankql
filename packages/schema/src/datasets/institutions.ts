@@ -11,6 +11,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     certificate: defineField({
       type: "integer",
+      label: "FDIC Certificate Number",
       description: "FDIC Certificate #",
       measure: "nominal",
       format: "id",
@@ -18,6 +19,7 @@ export const institutions = defineDataset({
     }),
     uninum: defineField({
       type: "integer",
+      label: "FDIC UNINUM",
       description: "FDIC's unique identifier number for holding companies, banks, branches and nondeposit subsidiaries.",
       measure: "nominal",
       format: "id",
@@ -25,6 +27,7 @@ export const institutions = defineDataset({
     }),
     fedRssdId: defineField({
       type: "integer",
+      label: "Federal Reserve RSSD ID",
       description: "Federal Reserve ID Number",
       measure: "nominal",
       format: "id",
@@ -32,6 +35,7 @@ export const institutions = defineDataset({
     }),
     name: defineField({
       type: "string",
+      label: "Institution Name",
       description: "Institution name",
       measure: "nominal",
       format: "text",
@@ -39,6 +43,7 @@ export const institutions = defineDataset({
     }),
     active: defineField({
       type: "integer",
+      label: "Active",
       description: "Institution Status",
       measure: "nominal",
       format: "boolean",
@@ -47,6 +52,7 @@ export const institutions = defineDataset({
     }),
     inactive: defineField({
       type: "integer",
+      label: "Inactive",
       description: "Inactive — institutions that are currently closed but were once insured by the FDIC.",
       measure: "nominal",
       format: "boolean",
@@ -58,6 +64,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     address: defineField({
       type: "string",
+      label: "Street Address",
       description: "Street Address",
       measure: "nominal",
       format: "text",
@@ -65,6 +72,7 @@ export const institutions = defineDataset({
     }),
     address2: defineField({
       type: "string",
+      label: "Street Address Line 2",
       description: "Street Address Line 2",
       measure: "nominal",
       format: "text",
@@ -72,6 +80,7 @@ export const institutions = defineDataset({
     }),
     city: defineField({
       type: "string",
+      label: "City",
       description: "City",
       measure: "nominal",
       format: "text",
@@ -79,6 +88,7 @@ export const institutions = defineDataset({
     }),
     county: defineField({
       type: "string",
+      label: "County",
       description: "County",
       measure: "nominal",
       format: "text",
@@ -86,6 +96,7 @@ export const institutions = defineDataset({
     }),
     stateName: defineField({
       type: "string",
+      label: "State Name",
       description: "State Name",
       measure: "nominal",
       format: "text",
@@ -93,6 +104,7 @@ export const institutions = defineDataset({
     }),
     stateAbbreviation: defineField({
       type: "string",
+      label: "State Abbreviation",
       description: "State Alpha code",
       measure: "nominal",
       format: "text",
@@ -100,6 +112,7 @@ export const institutions = defineDataset({
     }),
     stateNumber: defineField({
       type: "integer",
+      label: "FIPS State Number",
       description: "State Number — Federal Information Processing Standard code used to identify states.",
       measure: "nominal",
       format: "id",
@@ -107,6 +120,7 @@ export const institutions = defineDataset({
     }),
     stateCountyCode: defineField({
       type: "string",
+      label: "FIPS State/County Code",
       description: "State and county number — five digit FIPS state/county code.",
       measure: "nominal",
       format: "id",
@@ -114,6 +128,7 @@ export const institutions = defineDataset({
     }),
     zip: defineField({
       type: "string",
+      label: "ZIP Code",
       description: "Zip Code",
       measure: "nominal",
       format: "text",
@@ -121,6 +136,7 @@ export const institutions = defineDataset({
     }),
     latitude: defineField({
       type: "float",
+      label: "Latitude",
       description: "Latitude",
       measure: "quantitative",
       format: "coordinate",
@@ -128,6 +144,7 @@ export const institutions = defineDataset({
     }),
     longitude: defineField({
       type: "float",
+      label: "Longitude",
       description: "Longitude",
       measure: "quantitative",
       format: "coordinate",
@@ -139,6 +156,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     totalAssets: defineField({
       type: "float",
+      label: "Total Assets",
       description: "Total assets",
       measure: "quantitative",
       format: "currency-dollars",
@@ -147,6 +165,7 @@ export const institutions = defineDataset({
     }),
     totalDeposits: defineField({
       type: "float",
+      label: "Total Deposits",
       description: "Total deposits",
       measure: "quantitative",
       format: "currency-dollars",
@@ -155,6 +174,7 @@ export const institutions = defineDataset({
     }),
     domesticDeposits: defineField({
       type: "float",
+      label: "Domestic Deposits",
       description: "Deposits held in domestic offices",
       measure: "quantitative",
       format: "currency-dollars",
@@ -163,6 +183,7 @@ export const institutions = defineDataset({
     }),
     equityCapital: defineField({
       type: "float",
+      label: "Equity Capital",
       description: "Equity capital",
       measure: "quantitative",
       format: "currency-dollars",
@@ -171,6 +192,7 @@ export const institutions = defineDataset({
     }),
     netIncome: defineField({
       type: "float",
+      label: "Net Income",
       description: "Net income",
       measure: "quantitative",
       format: "currency-dollars",
@@ -179,6 +201,7 @@ export const institutions = defineDataset({
     }),
     netIncomeQuarterly: defineField({
       type: "float",
+      label: "Net Income (Quarterly)",
       description: "Net income - quarterly",
       measure: "quantitative",
       format: "currency-dollars",
@@ -187,6 +210,7 @@ export const institutions = defineDataset({
     }),
     returnOnAssets: defineField({
       type: "float",
+      label: "Return on Assets (ROA)",
       description: "Return on assets (ROA) — net income after taxes (annualized) as a percent of average total assets.",
       measure: "quantitative",
       format: "percentage",
@@ -194,6 +218,7 @@ export const institutions = defineDataset({
     }),
     returnOnAssetsQuarterly: defineField({
       type: "float",
+      label: "Return on Assets (Quarterly)",
       description: "Quarterly return on assets",
       measure: "quantitative",
       format: "percentage",
@@ -201,6 +226,7 @@ export const institutions = defineDataset({
     }),
     pretaxReturnOnAssets: defineField({
       type: "float",
+      label: "Pretax Return on Assets",
       description: "Pretax return on assets",
       measure: "quantitative",
       format: "percentage",
@@ -208,6 +234,7 @@ export const institutions = defineDataset({
     }),
     pretaxReturnOnAssetsQuarterly: defineField({
       type: "float",
+      label: "Pretax Return on Assets (Quarterly)",
       description: "Quarterly pretax return on assets",
       measure: "quantitative",
       format: "percentage",
@@ -215,6 +242,7 @@ export const institutions = defineDataset({
     }),
     returnOnEquity: defineField({
       type: "float",
+      label: "Return on Equity (ROE)",
       description: "Return on Equity (ROE) — annualized net income as a percent of average equity.",
       measure: "quantitative",
       format: "percentage",
@@ -222,6 +250,7 @@ export const institutions = defineDataset({
     }),
     returnOnEquityQuarterly: defineField({
       type: "float",
+      label: "Return on Equity (Quarterly)",
       description: "Quarterly return on equity",
       measure: "quantitative",
       format: "percentage",
@@ -233,6 +262,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     institutionClass: defineField({
       type: "string",
+      label: "Institution Class",
       description: "Institution Class — charter type, charter agent, Fed membership, and primary federal regulator.",
       measure: "nominal",
       format: "enum",
@@ -241,6 +271,7 @@ export const institutions = defineDataset({
     }),
     communityBank: defineField({
       type: "integer",
+      label: "Community Bank",
       description: "Community Bank — flag indicating whether the institution is a community bank.",
       measure: "nominal",
       format: "boolean",
@@ -248,6 +279,7 @@ export const institutions = defineDataset({
     }),
     classCode: defineField({
       type: "integer",
+      label: "Class Code",
       description: "Numeric Code — two-digit category identifying institution type.",
       measure: "nominal",
       format: "enum",
@@ -255,6 +287,7 @@ export const institutions = defineDataset({
     }),
     charteringAgency: defineField({
       type: "string",
+      label: "Chartering Agency",
       description: "Chartering Agency",
       measure: "nominal",
       format: "enum",
@@ -263,6 +296,7 @@ export const institutions = defineDataset({
     }),
     ownershipType: defineField({
       type: "integer",
+      label: "Ownership Type",
       description: "Ownership Type — stock (0) or mutual/non-stock (1) institution.",
       measure: "nominal",
       format: "enum",
@@ -270,6 +304,7 @@ export const institutions = defineDataset({
     }),
     specializationGroup: defineField({
       type: "integer",
+      label: "Specialization Group",
       description: "Asset Concentration Hierarchy — primary specialization in terms of asset concentration.",
       measure: "nominal",
       format: "enum",
@@ -277,6 +312,7 @@ export const institutions = defineDataset({
     }),
     specializationGroupName: defineField({
       type: "string",
+      label: "Specialization Group Name",
       description: "Specialization Group — name of asset concentration specialization.",
       measure: "nominal",
       format: "enum",
@@ -284,6 +320,7 @@ export const institutions = defineDataset({
     }),
     agriculturalLender: defineField({
       type: "integer",
+      label: "Agricultural Lender",
       description: "Agricultural lending institution indicator.",
       measure: "nominal",
       format: "boolean",
@@ -291,6 +328,7 @@ export const institutions = defineDataset({
     }),
     creditCardInstitution: defineField({
       type: "integer",
+      label: "Credit Card Institution",
       description: "Credit Card Institutions — institutions with total loans >50% of assets and credit card loans >50% of total loans.",
       measure: "nominal",
       format: "boolean",
@@ -298,6 +336,7 @@ export const institutions = defineDataset({
     }),
     minorityStatusCode: defineField({
       type: "integer",
+      label: "Minority Status Code",
       description: "Minority Status Code",
       measure: "nominal",
       format: "enum",
@@ -305,6 +344,7 @@ export const institutions = defineDataset({
     }),
     minorityStatusDescription: defineField({
       type: "string",
+      label: "Minority Status Description",
       description: "Minority Status Description",
       measure: "nominal",
       format: "enum",
@@ -312,6 +352,7 @@ export const institutions = defineDataset({
     }),
     subchapterS: defineField({
       type: "integer",
+      label: "Subchapter S Corporation",
       description: "Subchapter S Corporations — flag indicating Subchapter S corporation status.",
       measure: "nominal",
       format: "boolean",
@@ -319,6 +360,7 @@ export const institutions = defineDataset({
     }),
     trustPowers: defineField({
       type: "integer",
+      label: "Trust Powers",
       description: "Trust Powers — type of trust power the institution possesses.",
       measure: "nominal",
       format: "enum",
@@ -331,6 +373,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     primaryRegulator: defineField({
       type: "string",
+      label: "Primary Regulator",
       description: "Primary Regulator",
       measure: "nominal",
       format: "enum",
@@ -339,6 +382,7 @@ export const institutions = defineDataset({
     }),
     secondaryRegulator: defineField({
       type: "string",
+      label: "Secondary Regulator",
       description: "Secondary Regulator",
       measure: "nominal",
       format: "enum",
@@ -347,6 +391,7 @@ export const institutions = defineDataset({
     }),
     federalCharter: defineField({
       type: "integer",
+      label: "Federal Charter",
       description: "Federal charter flag — indicates whether the institution is chartered by the federal government.",
       measure: "nominal",
       format: "boolean",
@@ -354,6 +399,7 @@ export const institutions = defineDataset({
     }),
     stateCharter: defineField({
       type: "integer",
+      label: "State Charter",
       description: "State Charter flag.",
       measure: "nominal",
       format: "boolean",
@@ -361,6 +407,7 @@ export const institutions = defineDataset({
     }),
     federalReserveDistrict: defineField({
       type: "integer",
+      label: "Federal Reserve District",
       description: "Federal Reserve ID Number — district in which the institution is located.",
       measure: "nominal",
       format: "enum",
@@ -369,6 +416,7 @@ export const institutions = defineDataset({
     }),
     conservatorship: defineField({
       type: "string",
+      label: "Conservatorship",
       description: "Conservatorship — indicates if an institution is being operated in government conservatorship.",
       measure: "nominal",
       format: "enum",
@@ -377,6 +425,7 @@ export const institutions = defineDataset({
     }),
     denovo: defineField({
       type: "integer",
+      label: "De Novo Institution",
       description: "Denovo Institution — flag indicating a new institution (not a recharter).",
       measure: "nominal",
       format: "boolean",
@@ -384,6 +433,7 @@ export const institutions = defineDataset({
     }),
     multiBankHoldingCompany: defineField({
       type: "integer",
+      label: "Multi-Bank Holding Company",
       description: "Bank Holding Company Type — member of a multibank holding company.",
       measure: "nominal",
       format: "boolean",
@@ -391,6 +441,7 @@ export const institutions = defineDataset({
     }),
     foreignBankBranch: defineField({
       type: "integer",
+      label: "Foreign Bank Branch",
       description: "Insured offices of foreign banks.",
       measure: "nominal",
       format: "boolean",
@@ -398,6 +449,7 @@ export const institutions = defineDataset({
     }),
     depositInsuranceFundMember: defineField({
       type: "integer",
+      label: "Deposit Insurance Fund Member",
       description: "Deposit Insurance Fund member.",
       measure: "nominal",
       format: "boolean",
@@ -405,6 +457,7 @@ export const institutions = defineDataset({
     }),
     fdicInsured: defineField({
       type: "integer",
+      label: "FDIC Insured",
       description: "FDIC Insured.",
       measure: "nominal",
       format: "boolean",
@@ -412,6 +465,7 @@ export const institutions = defineDataset({
     }),
     bankInsuranceFundMember: defineField({
       type: "integer",
+      label: "Bank Insurance Fund Member",
       description: "Bank Insurance Fund member.",
       measure: "nominal",
       format: "boolean",
@@ -419,6 +473,7 @@ export const institutions = defineDataset({
     }),
     saifInsured: defineField({
       type: "integer",
+      label: "SAIF Insured",
       description: "SAIF Insured.",
       measure: "nominal",
       format: "boolean",
@@ -426,6 +481,7 @@ export const institutions = defineDataset({
     }),
     insuredSavings: defineField({
       type: "integer",
+      label: "Insured Savings Institution",
       description: "Insured Savings Institution.",
       measure: "nominal",
       format: "boolean",
@@ -433,6 +489,7 @@ export const institutions = defineDataset({
     }),
     insuredCommercial: defineField({
       type: "integer",
+      label: "Insured Commercial Bank",
       description: "Insured commercial banks.",
       measure: "nominal",
       format: "boolean",
@@ -440,6 +497,7 @@ export const institutions = defineDataset({
     }),
     primaryInsuranceAgency: defineField({
       type: "string",
+      label: "Primary Insurance Agency",
       description: "Primary Insurance Agency.",
       measure: "nominal",
       format: "enum",
@@ -447,6 +505,7 @@ export const institutions = defineDataset({
     }),
     secondaryInsuranceAgency: defineField({
       type: "string",
+      label: "Secondary Insurance Agency",
       description: "Secondary Insurance Fund.",
       measure: "nominal",
       format: "enum",
@@ -454,6 +513,7 @@ export const institutions = defineDataset({
     }),
     cfpbSupervised: defineField({
       type: "integer",
+      label: "CFPB Supervised",
       description: "CFPB Flag — indicates secondary supervision by CFPB.",
       measure: "nominal",
       format: "boolean",
@@ -461,6 +521,7 @@ export const institutions = defineDataset({
     }),
     form31Filer: defineField({
       type: "integer",
+      label: "FFIEC Form 31 Filer",
       description: "FFIEC Call Report 31 Filer — institution filed an FFIEC 031 Call Report.",
       measure: "nominal",
       format: "boolean",
@@ -472,6 +533,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     domesticOfficeCount: defineField({
       type: "integer",
+      label: "Domestic Offices",
       description: "Number of Domestic Offices",
       measure: "quantitative",
       format: "count",
@@ -479,6 +541,7 @@ export const institutions = defineDataset({
     }),
     foreignOfficeCount: defineField({
       type: "integer",
+      label: "Foreign Offices",
       description: "Number of Foreign Offices",
       measure: "quantitative",
       format: "count",
@@ -486,6 +549,7 @@ export const institutions = defineDataset({
     }),
     usOfficeCount: defineField({
       type: "integer",
+      label: "US Offices",
       description: "Number of US Offices — offices in all US commonwealths and territories.",
       measure: "quantitative",
       format: "count",
@@ -497,6 +561,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     holdingCompanyName: defineField({
       type: "string",
+      label: "Holding Company Name",
       description: "Bank Holding Company (Regulatory Top Holder)",
       measure: "nominal",
       format: "text",
@@ -504,6 +569,7 @@ export const institutions = defineDataset({
     }),
     holdingCompanyRssdId: defineField({
       type: "integer",
+      label: "Holding Company RSSD ID",
       description: "RSSDID - High Regulatory Holder — Federal Reserve Board ID of the regulatory high holding company.",
       measure: "nominal",
       format: "id",
@@ -511,6 +577,7 @@ export const institutions = defineDataset({
     }),
     holdingCompanyCity: defineField({
       type: "string",
+      label: "Holding Company City",
       description: "City of High Holder",
       measure: "nominal",
       format: "text",
@@ -518,6 +585,7 @@ export const institutions = defineDataset({
     }),
     holdingCompanyState: defineField({
       type: "string",
+      label: "Holding Company State",
       description: "Regulatory holding company state location.",
       measure: "nominal",
       format: "text",
@@ -525,6 +593,7 @@ export const institutions = defineDataset({
     }),
     parentCertificate: defineField({
       type: "integer",
+      label: "Parent Certificate Number",
       description: "Directly owned by another bank (CERT) — FDIC certificate number of the parent bank.",
       measure: "nominal",
       format: "id",
@@ -532,6 +601,7 @@ export const institutions = defineDataset({
     }),
     consolidatedParentCertificate: defineField({
       type: "integer",
+      label: "Consolidated Parent Certificate",
       description: "Directly owned by another bank (CERT) — certificate number of the parent with which financial data is consolidated.",
       measure: "nominal",
       format: "id",
@@ -539,6 +609,7 @@ export const institutions = defineDataset({
     }),
     ultimateCertificate: defineField({
       type: "integer",
+      label: "Ultimate Certificate Number",
       description: "Ultimate Cert — cert number of the last successor or acquirer.",
       measure: "nominal",
       format: "id",
@@ -546,6 +617,7 @@ export const institutions = defineDataset({
     }),
     newCertificate: defineField({
       type: "integer",
+      label: "New Certificate Number",
       description: "New certificate number — new cert resulting from a merger or acquisition.",
       measure: "nominal",
       format: "id",
@@ -557,6 +629,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     cbsaName: defineField({
       type: "string",
+      label: "CBSA Name",
       description: "Core Based Statistical Area Name",
       measure: "nominal",
       format: "text",
@@ -564,6 +637,7 @@ export const institutions = defineDataset({
     }),
     cbsaNumber: defineField({
       type: "integer",
+      label: "CBSA Number",
       description: "Core Based Statistical Areas — numeric CBSA code.",
       measure: "nominal",
       format: "id",
@@ -571,6 +645,7 @@ export const institutions = defineDataset({
     }),
     cbsaDivisionName: defineField({
       type: "string",
+      label: "CBSA Division Name",
       description: "Metropolitan Divisions Name",
       measure: "nominal",
       format: "text",
@@ -578,6 +653,7 @@ export const institutions = defineDataset({
     }),
     cbsaDivisionMember: defineField({
       type: "integer",
+      label: "CBSA Division Member",
       description: "Metropolitan Divisions Flag — member of a Core Based Statistical Division.",
       measure: "nominal",
       format: "boolean",
@@ -585,6 +661,7 @@ export const institutions = defineDataset({
     }),
     cbsaDivisionNumber: defineField({
       type: "integer",
+      label: "CBSA Division Number",
       description: "Metropolitan Divisions Number",
       measure: "nominal",
       format: "id",
@@ -592,6 +669,7 @@ export const institutions = defineDataset({
     }),
     cbsaMetroNumber: defineField({
       type: "integer",
+      label: "CBSA Metro Number",
       description: "Metropolitan Division Number — numeric Metropolitan Statistical Area code.",
       measure: "nominal",
       format: "id",
@@ -599,6 +677,7 @@ export const institutions = defineDataset({
     }),
     cbsaMetroMember: defineField({
       type: "integer",
+      label: "CBSA Metro Member",
       description: "Metropolitan Division Flag — institution is in a Metropolitan Statistical Area.",
       measure: "nominal",
       format: "boolean",
@@ -606,6 +685,7 @@ export const institutions = defineDataset({
     }),
     cbsaMetroName: defineField({
       type: "string",
+      label: "CBSA Metro Name",
       description: "Metropolitan Division Name",
       measure: "nominal",
       format: "text",
@@ -613,6 +693,7 @@ export const institutions = defineDataset({
     }),
     cbsaMicroMember: defineField({
       type: "integer",
+      label: "CBSA Micro Member",
       description: "Micropolitan Division Flag — institution is in a Micropolitan Statistical Area.",
       measure: "nominal",
       format: "boolean",
@@ -620,6 +701,7 @@ export const institutions = defineDataset({
     }),
     csaName: defineField({
       type: "string",
+      label: "CSA Name",
       description: "Combined Statistical Area Name",
       measure: "nominal",
       format: "text",
@@ -627,6 +709,7 @@ export const institutions = defineDataset({
     }),
     csaMember: defineField({
       type: "integer",
+      label: "CSA Member",
       description: "CSA Area Flag — institution is in a Combined Statistical Area.",
       measure: "nominal",
       format: "boolean",
@@ -634,6 +717,7 @@ export const institutions = defineDataset({
     }),
     csaNumber: defineField({
       type: "integer",
+      label: "CSA Number",
       description: "Combined Statistical Area Number",
       measure: "nominal",
       format: "id",
@@ -641,6 +725,7 @@ export const institutions = defineDataset({
     }),
     fdicGeographicRegion: defineField({
       type: "string",
+      label: "FDIC Geographic Region",
       description: "FDIC Geographic Region",
       measure: "nominal",
       format: "enum",
@@ -649,6 +734,7 @@ export const institutions = defineDataset({
     }),
     fdicSupervisoryRegion: defineField({
       type: "string",
+      label: "FDIC Supervisory Region",
       description: "FDIC Supervisory Region",
       measure: "nominal",
       format: "enum",
@@ -657,6 +743,7 @@ export const institutions = defineDataset({
     }),
     federalReserveRegion: defineField({
       type: "string",
+      label: "Federal Reserve Region",
       description: "Federal Reserve District",
       measure: "nominal",
       format: "enum",
@@ -665,6 +752,7 @@ export const institutions = defineDataset({
     }),
     occDistrict: defineField({
       type: "string",
+      label: "OCC District",
       description: "Office of the Comptroller — OCC District.",
       measure: "nominal",
       format: "enum",
@@ -673,6 +761,7 @@ export const institutions = defineDataset({
     }),
     supervisoryRegionNumber: defineField({
       type: "integer",
+      label: "Supervisory Region Number",
       description: "Supervisory Region Number — FDIC Supervisory Division or Region.",
       measure: "nominal",
       format: "enum",
@@ -681,6 +770,7 @@ export const institutions = defineDataset({
     }),
     qbpCommercialBankRegion: defineField({
       type: "string",
+      label: "QBP Commercial Bank Region",
       description: "Quarterly Banking Profile Commercial Bank Region",
       measure: "nominal",
       format: "text",
@@ -692,6 +782,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     establishedDate: defineField({
       type: "date",
+      label: "Established Date",
       description: "Established Date — date on which the institution began operations.",
       measure: "temporal",
       format: "date",
@@ -699,6 +790,7 @@ export const institutions = defineDataset({
     }),
     insuranceDate: defineField({
       type: "date",
+      label: "Insurance Date",
       description: "Date of Deposit Insurance — date the institution obtained federal deposit insurance.",
       measure: "temporal",
       format: "date",
@@ -706,6 +798,7 @@ export const institutions = defineDataset({
     }),
     insuranceDropDate: defineField({
       type: "date",
+      label: "Insurance Drop Date",
       description: "Date of Dropped Deposit Insurance",
       measure: "temporal",
       format: "date",
@@ -713,6 +806,7 @@ export const institutions = defineDataset({
     }),
     endDate: defineField({
       type: "date",
+      label: "End Date",
       description: "End date — date the institution became inactive (for closed institutions).",
       measure: "temporal",
       format: "date",
@@ -720,6 +814,7 @@ export const institutions = defineDataset({
     }),
     effectiveDate: defineField({
       type: "date",
+      label: "Effective Date",
       description: "Last Structure Change Effective Date",
       measure: "temporal",
       format: "date",
@@ -727,6 +822,7 @@ export const institutions = defineDataset({
     }),
     cfpbStartDate: defineField({
       type: "date",
+      label: "CFPB Start Date",
       description: "CFPB Effective Date — date the institution began secondary supervision by CFPB.",
       measure: "temporal",
       format: "date",
@@ -734,6 +830,7 @@ export const institutions = defineDataset({
     }),
     cfpbEndDate: defineField({
       type: "date",
+      label: "CFPB End Date",
       description: "CFPB End Date — date the institution ended supervision by CFPB.",
       measure: "temporal",
       format: "date",
@@ -741,6 +838,7 @@ export const institutions = defineDataset({
     }),
     reportDate: defineField({
       type: "date",
+      label: "Report Date",
       description: "Report Date — last day of the financial reporting period.",
       measure: "temporal",
       format: "date",
@@ -748,6 +846,7 @@ export const institutions = defineDataset({
     }),
     lastUpdated: defineField({
       type: "date",
+      label: "Last Updated",
       description: "Last update",
       measure: "temporal",
       format: "date",
@@ -755,6 +854,7 @@ export const institutions = defineDataset({
     }),
     runDate: defineField({
       type: "date",
+      label: "Run Date",
       description: "Run Date — day the institution information was updated.",
       measure: "temporal",
       format: "date",
@@ -762,6 +862,7 @@ export const institutions = defineDataset({
     }),
     processDate: defineField({
       type: "date",
+      label: "Process Date",
       description: "Last Structure Change Process Date",
       measure: "temporal",
       format: "date",
@@ -773,6 +874,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     webAddress: defineField({
       type: "string",
+      label: "Web Address",
       description: "Primary Internet Web Address",
       measure: "nominal",
       format: "url",
@@ -784,6 +886,7 @@ export const institutions = defineDataset({
     // -------------------------------------------------------------------------
     occCharterNumber: defineField({
       type: "string",
+      label: "OCC Charter Number",
       description: "OCC Charter Number",
       measure: "nominal",
       format: "id",
@@ -791,6 +894,7 @@ export const institutions = defineDataset({
     }),
     otsDocketNumber: defineField({
       type: "string",
+      label: "OTS Docket Number",
       description: "OTS Docket Number",
       measure: "nominal",
       format: "id",

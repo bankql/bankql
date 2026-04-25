@@ -11,6 +11,7 @@ export const locations = defineDataset({
     // -------------------------------------------------------------------------
     uninum: defineField({
       type: "integer",
+      label: "Branch UNINUM",
       description: "Unique Identification Number for a Branch Office as assigned by the FDIC.",
       measure: "nominal",
       format: "id",
@@ -18,6 +19,7 @@ export const locations = defineDataset({
     }),
     certificate: defineField({
       type: "integer",
+      label: "Institution FDIC Certificate Number",
       description: "Institution FDIC Certificate #",
       measure: "nominal",
       format: "id",
@@ -26,6 +28,7 @@ export const locations = defineDataset({
     }),
     institutionUninum: defineField({
       type: "integer",
+      label: "Owner Institution UNINUM",
       description: "FDIC UNINUM of the Owner Institution — updated with every merger or purchase to reflect the most current owner.",
       measure: "nominal",
       format: "id",
@@ -34,6 +37,7 @@ export const locations = defineDataset({
     }),
     officeNumber: defineField({
       type: "integer",
+      label: "Branch Office Number",
       description: "Branch Number — the branch's corresponding office number.",
       measure: "nominal",
       format: "id",
@@ -41,6 +45,7 @@ export const locations = defineDataset({
     }),
     mainOffice: defineField({
       type: "integer",
+      label: "Main Office",
       description: "Main Office — flag identifying the main office for the institution.",
       measure: "nominal",
       format: "boolean",
@@ -52,6 +57,7 @@ export const locations = defineDataset({
     // -------------------------------------------------------------------------
     institutionName: defineField({
       type: "string",
+      label: "Institution Name",
       description: "Institution Name — legal name of the FDIC insured institution.",
       measure: "nominal",
       format: "text",
@@ -59,6 +65,7 @@ export const locations = defineDataset({
     }),
     officeName: defineField({
       type: "string",
+      label: "Office Name",
       description: "Office Name — name of the branch.",
       measure: "nominal",
       format: "text",
@@ -70,6 +77,7 @@ export const locations = defineDataset({
     // -------------------------------------------------------------------------
     address: defineField({
       type: "string",
+      label: "Branch Address",
       description: "Branch Address — street address at which the branch is physically located.",
       measure: "nominal",
       format: "text",
@@ -77,6 +85,7 @@ export const locations = defineDataset({
     }),
     city: defineField({
       type: "string",
+      label: "Branch City",
       description: "Branch City — city in which the branch is physically located.",
       measure: "nominal",
       format: "text",
@@ -84,6 +93,7 @@ export const locations = defineDataset({
     }),
     county: defineField({
       type: "string",
+      label: "Branch County",
       description: "Branch County — county where the branch is physically located.",
       measure: "nominal",
       format: "text",
@@ -91,6 +101,7 @@ export const locations = defineDataset({
     }),
     stateName: defineField({
       type: "string",
+      label: "Branch State",
       description: "Branch State",
       measure: "nominal",
       format: "text",
@@ -98,6 +109,7 @@ export const locations = defineDataset({
     }),
     stateAbbreviation: defineField({
       type: "string",
+      label: "Branch State Abbreviation",
       description: "Branch State Abbreviation",
       measure: "nominal",
       format: "text",
@@ -105,6 +117,7 @@ export const locations = defineDataset({
     }),
     stateCountyCode: defineField({
       type: "string",
+      label: "FIPS State/County Code",
       description: "State and County Number — five digit FIPS state/county code.",
       measure: "nominal",
       format: "id",
@@ -112,6 +125,7 @@ export const locations = defineDataset({
     }),
     zip: defineField({
       type: "string",
+      label: "Branch ZIP Code",
       description: "Branch Zip Code",
       measure: "nominal",
       format: "text",
@@ -123,6 +137,7 @@ export const locations = defineDataset({
     // -------------------------------------------------------------------------
     institutionClass: defineField({
       type: "string",
+      label: "Institution Class",
       description: "Institution Class — charter type, charter agent, Fed membership, and primary federal regulator.",
       measure: "nominal",
       format: "enum",
@@ -131,6 +146,7 @@ export const locations = defineDataset({
     }),
     serviceType: defineField({
       type: "integer",
+      label: "Service Type Code",
       description: "Service Type Code — type of office.",
       measure: "nominal",
       format: "enum",
@@ -146,6 +162,7 @@ export const locations = defineDataset({
     // -------------------------------------------------------------------------
     cbsaName: defineField({
       type: "string",
+      label: "CBSA Name (Branch)",
       description: "Core Based Statistical Area Name (Branch)",
       measure: "nominal",
       format: "text",
@@ -153,6 +170,7 @@ export const locations = defineDataset({
     }),
     cbsaNumber: defineField({
       type: "integer",
+      label: "CBSA Number (Branch)",
       description: "Core Based Statistical Areas (Branch) — numeric CBSA code.",
       measure: "nominal",
       format: "id",
@@ -160,6 +178,7 @@ export const locations = defineDataset({
     }),
     cbsaDivisionName: defineField({
       type: "string",
+      label: "CBSA Division Name (Branch)",
       description: "Metropolitan Divisions Name (Branch)",
       measure: "nominal",
       format: "text",
@@ -167,6 +186,7 @@ export const locations = defineDataset({
     }),
     cbsaDivisionMember: defineField({
       type: "integer",
+      label: "CBSA Division Member (Branch)",
       description: "Metropolitan Divisions Flag (Branch)",
       measure: "nominal",
       format: "boolean",
@@ -174,6 +194,7 @@ export const locations = defineDataset({
     }),
     cbsaDivisionNumber: defineField({
       type: "integer",
+      label: "CBSA Division Number (Branch)",
       description: "Metropolitan Divisions Number (Branch)",
       measure: "nominal",
       format: "id",
@@ -181,6 +202,7 @@ export const locations = defineDataset({
     }),
     cbsaMetroNumber: defineField({
       type: "integer",
+      label: "CBSA Metro Number (Branch)",
       description: "Metropolitan Division Number (Branch)",
       measure: "nominal",
       format: "id",
@@ -188,6 +210,7 @@ export const locations = defineDataset({
     }),
     cbsaMetroMember: defineField({
       type: "integer",
+      label: "CBSA Metro Member (Branch)",
       description: "Metropolitan Division Flag (Branch)",
       measure: "nominal",
       format: "boolean",
@@ -195,6 +218,7 @@ export const locations = defineDataset({
     }),
     cbsaMetroName: defineField({
       type: "string",
+      label: "CBSA Metro Name (Branch)",
       description: "Metropolitan Division Name (Branch)",
       measure: "nominal",
       format: "text",
@@ -202,6 +226,7 @@ export const locations = defineDataset({
     }),
     cbsaMicroMember: defineField({
       type: "integer",
+      label: "CBSA Micro Member (Branch)",
       description: "Micropolitan Division Flag (Branch)",
       measure: "nominal",
       format: "boolean",
@@ -209,6 +234,7 @@ export const locations = defineDataset({
     }),
     csaName: defineField({
       type: "string",
+      label: "CSA Name (Branch)",
       description: "Combined Statistical Area Name (Branch)",
       measure: "nominal",
       format: "text",
@@ -216,6 +242,7 @@ export const locations = defineDataset({
     }),
     csaMember: defineField({
       type: "integer",
+      label: "CSA Member (Branch)",
       description: "Combined Statistical Area Flag (Branch)",
       measure: "nominal",
       format: "boolean",
@@ -223,6 +250,7 @@ export const locations = defineDataset({
     }),
     csaNumber: defineField({
       type: "integer",
+      label: "CSA Number (Branch)",
       description: "Combined Statistical Area Number (Branch)",
       measure: "nominal",
       format: "id",
@@ -234,6 +262,7 @@ export const locations = defineDataset({
     // -------------------------------------------------------------------------
     establishedDate: defineField({
       type: "date",
+      label: "Branch Established Date",
       description: "Branch Established Date — date on which the branch began operations.",
       measure: "temporal",
       format: "date",
@@ -241,6 +270,7 @@ export const locations = defineDataset({
     }),
     runDate: defineField({
       type: "date",
+      label: "Run Date",
       description: "Run Date — day the institution information was updated.",
       measure: "temporal",
       format: "date",

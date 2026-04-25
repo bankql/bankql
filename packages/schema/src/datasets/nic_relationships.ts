@@ -10,6 +10,7 @@ export const nic_relationships = defineDataset({
     // -------------------------------------------------------------------------
     parentRssdId: defineField({
       type: "integer",
+      label: "Parent RSSD ID",
       description: "RSSD ID of Parent — entity that owns or controls Offspring.",
       measure: "nominal",
       format: "id",
@@ -18,6 +19,7 @@ export const nic_relationships = defineDataset({
     }),
     offspringRssdId: defineField({
       type: "integer",
+      label: "Offspring RSSD ID",
       description: "RSSD ID of Offspring — entity that is owned or controlled by Parent.",
       measure: "nominal",
       format: "id",
@@ -26,6 +28,7 @@ export const nic_relationships = defineDataset({
     }),
     dateStart: defineField({
       type: "integer",
+      label: "Date Start (YYYYMMDD)",
       description: "Date Start — first date this relationship row was known to be valid. Format YYYYMMDD.",
       measure: "temporal",
       format: "date",
@@ -33,6 +36,7 @@ export const nic_relationships = defineDataset({
     }),
     relationshipLevel: defineField({
       type: "float",
+      label: "Relationship Level",
       description: "Relationship Level (1=Direct, 2=Indirect, 3=2G3, 4=Debt Previously Contracted).",
       measure: "nominal",
       format: "enum",
@@ -45,6 +49,7 @@ export const nic_relationships = defineDataset({
     // -------------------------------------------------------------------------
     dateEnd: defineField({
       type: "integer",
+      label: "Date End (YYYYMMDD)",
       description: "Date End — last date the record was valid. 99991231 = non-terminated. Format YYYYMMDD.",
       measure: "temporal",
       format: "date",
@@ -52,6 +57,7 @@ export const nic_relationships = defineDataset({
     }),
     dateStartTimestamp: defineField({
       type: "datetime",
+      label: "Date Start (DB2 Timestamp)",
       description: "Date Start (DB2 datetime format).",
       measure: "temporal",
       format: "datetime",
@@ -59,6 +65,7 @@ export const nic_relationships = defineDataset({
     }),
     dateEndTimestamp: defineField({
       type: "datetime",
+      label: "Date End (DB2 Timestamp)",
       description: "Date End (DB2 datetime format).",
       measure: "temporal",
       format: "datetime",
@@ -66,6 +73,7 @@ export const nic_relationships = defineDataset({
     }),
     relationshipEstablishedDate: defineField({
       type: "integer",
+      label: "Relationship Established Date (YYYYMMDD)",
       description: "Date Relationship was Established — may predate dateStart for pre-regulation relationships. Format YYYYMMDD.",
       measure: "temporal",
       format: "date",
@@ -73,6 +81,7 @@ export const nic_relationships = defineDataset({
     }),
     relationshipEstablishedTimestamp: defineField({
       type: "datetime",
+      label: "Relationship Established Date (DB2 Timestamp)",
       description: "Date Relationship was Established (DB2 datetime format).",
       measure: "temporal",
       format: "datetime",
@@ -84,6 +93,7 @@ export const nic_relationships = defineDataset({
     // -------------------------------------------------------------------------
     controlIndicator: defineField({
       type: "float",
+      label: "Control Indicator",
       description: "Control Indicator — whether Parent controls Offspring (0=N/A, 1=Controlled, 2=Non-controlled).",
       measure: "nominal",
       format: "enum",
@@ -92,6 +102,7 @@ export const nic_relationships = defineDataset({
     }),
     regulatedIndicator: defineField({
       type: "float",
+      label: "Regulated Indicator",
       description: "Regulated Indicator — whether the relationship is governed by banking statutes (1=Regulated, 2=Unregulated).",
       measure: "nominal",
       format: "enum",
@@ -104,6 +115,7 @@ export const nic_relationships = defineDataset({
     // -------------------------------------------------------------------------
     equityIndicator: defineField({
       type: "float",
+      label: "Equity Indicator",
       description: "Equity Indicator — form of ownership (0=Other basis, 1=Exact % in BHC/bank/FBO, 2=Bracket % in non-banking).",
       measure: "nominal",
       format: "enum",
@@ -112,6 +124,7 @@ export const nic_relationships = defineDataset({
     }),
     percentEquity: defineField({
       type: "float",
+      label: "Percent Equity Voting Control",
       description: "Percent of Equity Voting Control — Parent's percent ownership or control of Offspring.",
       measure: "quantitative",
       format: "percentage",
@@ -119,6 +132,7 @@ export const nic_relationships = defineDataset({
     }),
     percentEquityBracket: defineField({
       type: "string",
+      label: "Percent Equity Bracket",
       description: "Percent Equity Bracket — derived ownership range (100*, 80-<100, >50-<80, 25-50, <25, 0).",
       measure: "nominal",
       format: "enum",
@@ -127,6 +141,7 @@ export const nic_relationships = defineDataset({
     }),
     percentEquityFormat: defineField({
       type: "string",
+      label: "Percent Equity Format",
       description: "Percent Equity Format — text description of how percent is reported (Other, Exact, Bracket).",
       measure: "nominal",
       format: "enum",
@@ -135,6 +150,7 @@ export const nic_relationships = defineDataset({
     }),
     percentOther: defineField({
       type: "float",
+      label: "Percent Other Voting Control",
       description: "Percent of Other Voting Control — exact percent when basis is non-voting equity or merchant banking investment.",
       measure: "quantitative",
       format: "percentage",
@@ -142,6 +158,7 @@ export const nic_relationships = defineDataset({
     }),
     otherBasisIndicator: defineField({
       type: "float",
+      label: "Other Basis for Relationship Indicator",
       description: "Other Basis for Relationship Indicator (0=None, 1=Management contract/board control, 2=Non-voting equity, 3=Merchant banking, 4=Subordinated debt, etc.).",
       measure: "nominal",
       format: "enum",
@@ -150,6 +167,7 @@ export const nic_relationships = defineDataset({
     }),
     financialConsolidationIndicator: defineField({
       type: "float",
+      label: "Financial Consolidation Indicator",
       description: "Financial Consolidation Indicator — whether the company is consolidated in the reporter's financial statements (0=N/A, 1=Yes, 2=No).",
       measure: "nominal",
       format: "enum",
@@ -158,6 +176,7 @@ export const nic_relationships = defineDataset({
     }),
     merchantBankingCost: defineField({
       type: "float",
+      label: "Merchant Banking / Insurance Investment",
       description: "Merchant Banking / Insurance Company Investment — dollar amount (in millions) of FHC investments under merchant banking or insurance authority.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -166,6 +185,7 @@ export const nic_relationships = defineDataset({
     }),
     regulationKInvestment: defineField({
       type: "float",
+      label: "Regulation K Subpart A Investment",
       description: "Regulation K Subpart A Investment (0=N/A, 1=Portfolio Investment, 2=Joint Venture, 3=Subsidiary).",
       measure: "nominal",
       format: "enum",
@@ -178,6 +198,7 @@ export const nic_relationships = defineDataset({
     // -------------------------------------------------------------------------
     reasonRowCreated: defineField({
       type: "float",
+      label: "Reason Row Created",
       description: "Reason for Creation of the Relationship row (1=Initial, 2=Equity change, 3=Reestablishment, 4=Basis change, 5=Control change, 6=Reg change, 8=Other).",
       measure: "nominal",
       format: "enum",
@@ -186,6 +207,7 @@ export const nic_relationships = defineDataset({
     }),
     reasonTerminated: defineField({
       type: "float",
+      label: "Reason Terminated",
       description: "Reason for Termination of the Relationship (0=Ongoing, 1=Terminated no remaining basis, 2=Parent sold/transferred, 3=Offspring liquidated/merged, 4=Below threshold, 5=Parent ceased, 6=Regulatory criteria change).",
       measure: "nominal",
       format: "enum",

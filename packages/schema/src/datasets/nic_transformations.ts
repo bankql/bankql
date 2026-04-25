@@ -10,6 +10,7 @@ export const nic_transformations = defineDataset({
     // -------------------------------------------------------------------------
     predecessorRssdId: defineField({
       type: "integer",
+      label: "Predecessor RSSD ID",
       description: "RSSD ID of Predecessor — the entity that was transformed (the non-survivor in a merger).",
       measure: "nominal",
       format: "id",
@@ -18,6 +19,7 @@ export const nic_transformations = defineDataset({
     }),
     successorRssdId: defineField({
       type: "integer",
+      label: "Successor RSSD ID",
       description: "RSSD ID of Successor — the entity that continues or comes into existence as a result of the transformation (the survivor in a merger).",
       measure: "nominal",
       format: "id",
@@ -26,6 +28,7 @@ export const nic_transformations = defineDataset({
     }),
     transformationDate: defineField({
       type: "integer",
+      label: "Transformation Date (YYYYMMDD)",
       description: "Date of Transformation — date on which the transformation became effective. Format YYYYMMDD.",
       measure: "temporal",
       format: "date",
@@ -33,6 +36,7 @@ export const nic_transformations = defineDataset({
     }),
     transformationTimestamp: defineField({
       type: "datetime",
+      label: "Transformation Date (DB2 Timestamp)",
       description: "Date of Transformation (DB2 datetime format).",
       measure: "temporal",
       format: "datetime",
@@ -44,6 +48,7 @@ export const nic_transformations = defineDataset({
     // -------------------------------------------------------------------------
     transformationCode: defineField({
       type: "float",
+      label: "Transformation Type Code",
       description: "Transformation Type Code — describes the event causing the transformation.",
       measure: "nominal",
       format: "enum",
@@ -52,6 +57,7 @@ export const nic_transformations = defineDataset({
     }),
     accountingMethod: defineField({
       type: "float",
+      label: "Accounting Method",
       description: "Accounting Method — method used in resolving a non-failure merger (0=N/A, 1=Pooling of interests, 2=Purchase/Acquisition).",
       measure: "nominal",
       format: "enum",

@@ -10,6 +10,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     year: defineField({
       type: "integer",
+      label: "Survey Year",
       description: "Year of survey (1994–current). All SOD surveys are annual as of June 30.",
       measure: "temporal",
       format: "date",
@@ -17,6 +18,7 @@ export const sod = defineDataset({
     }),
     certificate: defineField({
       type: "integer",
+      label: "FDIC Certificate Number",
       description: "The certificate number assigned to an institution for deposit insurance.",
       measure: "nominal",
       format: "id",
@@ -25,6 +27,7 @@ export const sod = defineDataset({
     }),
     branchNumber: defineField({
       type: "integer",
+      label: "Branch Number",
       description: "Branch Number — numerical reference to identify a branch office within one institution.",
       measure: "nominal",
       format: "id",
@@ -32,6 +35,7 @@ export const sod = defineDataset({
     }),
     uninum: defineField({
       type: "integer",
+      label: "Branch UNINUM",
       description: "Unique number associated with a specific physical branch location — persists across ownership changes.",
       measure: "nominal",
       format: "id",
@@ -44,6 +48,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     institutionName: defineField({
       type: "string",
+      label: "Institution Name",
       description: "Institution name.",
       measure: "nominal",
       format: "text",
@@ -51,6 +56,7 @@ export const sod = defineDataset({
     }),
     branchName: defineField({
       type: "string",
+      label: "Branch Name",
       description: "Branch name.",
       measure: "nominal",
       format: "text",
@@ -58,6 +64,7 @@ export const sod = defineDataset({
     }),
     holdingCompanyName: defineField({
       type: "string",
+      label: "Holding Company Name",
       description: "The name of the headquarters of the top regulatory bank holding company.",
       measure: "nominal",
       format: "text",
@@ -69,6 +76,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     address: defineField({
       type: "string",
+      label: "HQ Address",
       description: "The physical address of the main office (headquarters) of the institution.",
       measure: "nominal",
       format: "text",
@@ -76,6 +84,7 @@ export const sod = defineDataset({
     }),
     city: defineField({
       type: "string",
+      label: "HQ City",
       description: "The city where the headquarters of the institution is located.",
       measure: "nominal",
       format: "text",
@@ -83,6 +92,7 @@ export const sod = defineDataset({
     }),
     stateAbbreviation: defineField({
       type: "string",
+      label: "HQ State Abbreviation",
       description: "The state abbreviation of the location of the institution's headquarters.",
       measure: "nominal",
       format: "text",
@@ -90,6 +100,7 @@ export const sod = defineDataset({
     }),
     stateName: defineField({
       type: "string",
+      label: "HQ State Name",
       description: "The state name of the location of the institution's headquarters.",
       measure: "nominal",
       format: "text",
@@ -97,6 +108,7 @@ export const sod = defineDataset({
     }),
     stateCountyCode: defineField({
       type: "string",
+      label: "HQ FIPS State/County Code",
       description: "The state and county FIPS code associated with the headquarters location.",
       measure: "nominal",
       format: "id",
@@ -104,6 +116,7 @@ export const sod = defineDataset({
     }),
     zip: defineField({
       type: "string",
+      label: "HQ ZIP Code",
       description: "The ZIP code associated with the physical address of the institution's headquarters.",
       measure: "nominal",
       format: "text",
@@ -115,6 +128,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     branchAddress: defineField({
       type: "string",
+      label: "Branch Address",
       description: "Physical location of the branch.",
       measure: "nominal",
       format: "text",
@@ -122,6 +136,7 @@ export const sod = defineDataset({
     }),
     branchCity: defineField({
       type: "string",
+      label: "Branch City",
       description: "Reported city in which the branch is located.",
       measure: "nominal",
       format: "text",
@@ -129,6 +144,7 @@ export const sod = defineDataset({
     }),
     branchCity2: defineField({
       type: "string",
+      label: "Branch Central City",
       description: "Central city based on the reported ZIP code of the branch.",
       measure: "nominal",
       format: "text",
@@ -136,6 +152,7 @@ export const sod = defineDataset({
     }),
     branchCountyName: defineField({
       type: "string",
+      label: "Branch County Name",
       description: "County name in which the branch is located.",
       measure: "nominal",
       format: "text",
@@ -143,6 +160,7 @@ export const sod = defineDataset({
     }),
     branchCountyNumber: defineField({
       type: "string",
+      label: "Branch FIPS County Number",
       description: "County number corresponding to the county in which the branch is located.",
       measure: "nominal",
       format: "id",
@@ -150,6 +168,7 @@ export const sod = defineDataset({
     }),
     branchStateAbbreviation: defineField({
       type: "string",
+      label: "Branch State Abbreviation",
       description: "The state abbreviation of the location in which the branch is physically located.",
       measure: "nominal",
       format: "text",
@@ -157,6 +176,7 @@ export const sod = defineDataset({
     }),
     branchStateName: defineField({
       type: "string",
+      label: "Branch State Name",
       description: "The state name where branch is physically located.",
       measure: "nominal",
       format: "text",
@@ -164,6 +184,7 @@ export const sod = defineDataset({
     }),
     branchStateCountyCode: defineField({
       type: "string",
+      label: "Branch FIPS State/County Code",
       description: "The state and county FIPS code associated with the specific branch location.",
       measure: "nominal",
       format: "id",
@@ -171,6 +192,7 @@ export const sod = defineDataset({
     }),
     branchStateNumber: defineField({
       type: "integer",
+      label: "Branch FIPS State Number",
       description: "The FIPS number of the state in which the branch is physically located.",
       measure: "nominal",
       format: "id",
@@ -178,6 +200,7 @@ export const sod = defineDataset({
     }),
     branchZip: defineField({
       type: "string",
+      label: "Branch ZIP Code",
       description: "The ZIP code associated with the physical address of the branch.",
       measure: "nominal",
       format: "text",
@@ -185,6 +208,7 @@ export const sod = defineDataset({
     }),
     branchLatitude: defineField({
       type: "float",
+      label: "Branch Latitude",
       description: "The latitude of the branch's physical location.",
       measure: "quantitative",
       format: "coordinate",
@@ -192,6 +216,7 @@ export const sod = defineDataset({
     }),
     branchLongitude: defineField({
       type: "float",
+      label: "Branch Longitude",
       description: "The longitude of the branch's physical location.",
       measure: "quantitative",
       format: "coordinate",
@@ -199,6 +224,7 @@ export const sod = defineDataset({
     }),
     branchEstablishedDate: defineField({
       type: "date",
+      label: "Branch Established Date",
       description: "The date that the branch location was established.",
       measure: "temporal",
       format: "date",
@@ -206,6 +232,7 @@ export const sod = defineDataset({
     }),
     branchAcquiredDate: defineField({
       type: "date",
+      label: "Branch Acquired Date",
       description: "The date that a branch was last acquired by another institution.",
       measure: "temporal",
       format: "date",
@@ -213,6 +240,7 @@ export const sod = defineDataset({
     }),
     branchLocationMatchQuality: defineField({
       type: "string",
+      label: "Branch Location Match Quality",
       description: "The quality of the match of the branch's physical location to a latitude/longitude.",
       measure: "nominal",
       format: "text",
@@ -220,6 +248,7 @@ export const sod = defineDataset({
     }),
     branchLocationMethod: defineField({
       type: "string",
+      label: "Branch Location Method",
       description: "The method used to arrive at the latitude and longitude of the branch's physical location.",
       measure: "nominal",
       format: "text",
@@ -231,6 +260,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     mainOffice: defineField({
       type: "integer",
+      label: "Main Office",
       description: "Main office / branch identifier — main office = 1, branch = 0.",
       measure: "nominal",
       format: "boolean",
@@ -238,6 +268,7 @@ export const sod = defineDataset({
     }),
     depositReportingType: defineField({
       type: "string",
+      label: "Deposit Reporting Type",
       description: "Code describing the nature of reported deposits — C=Combined, E=Estimated, N=Non Deposit, M=Main Office.",
       measure: "nominal",
       format: "enum",
@@ -246,6 +277,7 @@ export const sod = defineDataset({
     }),
     branchServiceType: defineField({
       type: "integer",
+      label: "Branch Service Type",
       description: "Branch service type code.",
       measure: "nominal",
       format: "enum",
@@ -254,6 +286,7 @@ export const sod = defineDataset({
     }),
     consolidatedOfficeNumber: defineField({
       type: "integer",
+      label: "Consolidated Office Number",
       description: "When BRCENM=C (consolidated), the office number (BRNUM) in which deposits are reported.",
       measure: "nominal",
       format: "id",
@@ -261,6 +294,7 @@ export const sod = defineDataset({
     }),
     mainOfficeOnly: defineField({
       type: "integer",
+      label: "Main Office Only",
       description: "Flag identifying an institution with only a main office location; no branch locations.",
       measure: "nominal",
       format: "boolean",
@@ -272,6 +306,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     branchDeposits: defineField({
       type: "float",
+      label: "Branch Deposits",
       description: "Branch office deposits as of June 30.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -280,6 +315,7 @@ export const sod = defineDataset({
     }),
     totalDeposits: defineField({
       type: "float",
+      label: "Total Deposits",
       description: "Total deposits of the institution as of June 30.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -288,6 +324,7 @@ export const sod = defineDataset({
     }),
     domesticDeposits: defineField({
       type: "float",
+      label: "Domestic Deposits",
       description: "Total domestic deposits of the institution as of June 30.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -296,6 +333,7 @@ export const sod = defineDataset({
     }),
     escrowDeposits: defineField({
       type: "float",
+      label: "Escrow Deposits",
       description: "Escrow deposits reported on the Thrift Financial Reports.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -304,6 +342,7 @@ export const sod = defineDataset({
     }),
     territoryDemandDeposits: defineField({
       type: "float",
+      label: "Territory Demand Deposits",
       description: "Demand deposits in insured branches located in Puerto Rico and U.S. Territories.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -312,6 +351,7 @@ export const sod = defineDataset({
     }),
     territoryTimeSavingsDeposits: defineField({
       type: "float",
+      label: "Territory Time/Savings Deposits",
       description: "Time and savings deposits in insured branches located in Puerto Rico and U.S. Territories.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -324,6 +364,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     totalAssets: defineField({
       type: "float",
+      label: "Total Assets",
       description: "Total assets of the institution as of June 30. Repeated for every branch — use once per institution to avoid duplication.",
       measure: "quantitative",
       format: "currency-dollars",
@@ -336,6 +377,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     institutionClass: defineField({
       type: "string",
+      label: "Institution Class",
       description: "Institution Class — major groupings based on insuring agent, entity type, charter agent, and Fed membership.",
       measure: "nominal",
       format: "enum",
@@ -344,6 +386,7 @@ export const sod = defineDataset({
     }),
     classCode: defineField({
       type: "integer",
+      label: "Class Code",
       description: "Two-digit numeric code identifying the major and minor categories of an institution.",
       measure: "nominal",
       format: "enum",
@@ -351,6 +394,7 @@ export const sod = defineDataset({
     }),
     charteringAgencyName: defineField({
       type: "string",
+      label: "Chartering Agency Name",
       description: "The name of the chartering agency of the institution.",
       measure: "nominal",
       format: "enum",
@@ -359,6 +403,7 @@ export const sod = defineDataset({
     }),
     charteringAgency: defineField({
       type: "string",
+      label: "Chartering Agency",
       description: "The abbreviation of the chartering agency of the institution.",
       measure: "nominal",
       format: "enum",
@@ -367,6 +412,7 @@ export const sod = defineDataset({
     }),
     charterType: defineField({
       type: "string",
+      label: "Charter Type",
       description: "Identifies whether an institution is federally or state chartered.",
       measure: "nominal",
       format: "enum",
@@ -374,6 +420,7 @@ export const sod = defineDataset({
     }),
     primaryRegulator: defineField({
       type: "string",
+      label: "Primary Regulator",
       description: "The primary regulatory agency of the institution.",
       measure: "nominal",
       format: "enum",
@@ -382,6 +429,7 @@ export const sod = defineDataset({
     }),
     primaryInsurer: defineField({
       type: "string",
+      label: "Primary Insurer",
       description: "The primary insurer, insurance agent, or insurance status of an institution.",
       measure: "nominal",
       format: "enum",
@@ -390,6 +438,7 @@ export const sod = defineDataset({
     }),
     insuranceCategory: defineField({
       type: "string",
+      label: "Insurance Category",
       description: "Identifies commercial banks (CB), savings institutions (SA), and insured branches of foreign banks (IB).",
       measure: "nominal",
       format: "enum",
@@ -398,6 +447,7 @@ export const sod = defineDataset({
     }),
     denovo: defineField({
       type: "integer",
+      label: "De Novo Institution",
       description: "Flag indicating whether an institution is a new institution, not a recharter.",
       measure: "nominal",
       format: "boolean",
@@ -405,6 +455,7 @@ export const sod = defineDataset({
     }),
     holdingCompanyType: defineField({
       type: "string",
+      label: "Holding Company Type",
       description: "Holding company type — MULT (multi-bank), ONE (one-bank), NONE (not a member).",
       measure: "nominal",
       format: "enum",
@@ -413,6 +464,7 @@ export const sod = defineDataset({
     }),
     specializationGroup: defineField({
       type: "integer",
+      label: "Specialization Group",
       description: "Asset concentration specialization group.",
       measure: "nominal",
       format: "enum",
@@ -420,6 +472,7 @@ export const sod = defineDataset({
     }),
     specializationDescription: defineField({
       type: "string",
+      label: "Specialization Description",
       description: "Description of the institution's primary asset specialization.",
       measure: "nominal",
       format: "enum",
@@ -428,6 +481,7 @@ export const sod = defineDataset({
     }),
     filesCallReport: defineField({
       type: "integer",
+      label: "Files Call Report",
       description: "Prior to 2012, OTS institutions filed a Thrift Financial Report (TFR). All others file the CALL report.",
       measure: "nominal",
       format: "boolean",
@@ -435,6 +489,7 @@ export const sod = defineDataset({
     }),
     otsDocketNumber: defineField({
       type: "string",
+      label: "OTS Docket Number",
       description: "Unique identification number assigned to OTS-chartered institutions or FHLB members.",
       measure: "nominal",
       format: "id",
@@ -442,6 +497,7 @@ export const sod = defineDataset({
     }),
     headquarteredInUsa: defineField({
       type: "integer",
+      label: "Headquartered in USA",
       description: "Flag identifying that the institution is headquartered in the United States.",
       measure: "nominal",
       format: "boolean",
@@ -449,6 +505,7 @@ export const sod = defineDataset({
     }),
     country: defineField({
       type: "string",
+      label: "HQ Country",
       description: "The country name where the headquarters of the institution is chartered.",
       measure: "nominal",
       format: "text",
@@ -456,6 +513,7 @@ export const sod = defineDataset({
     }),
     branchCountry: defineField({
       type: "string",
+      label: "Branch Country",
       description: "Country name in which the branch is located.",
       measure: "nominal",
       format: "text",
@@ -467,6 +525,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     fdicRegionNumber: defineField({
       type: "integer",
+      label: "FDIC Region Number",
       description: "The number assigned to the FDIC Regional Office that services the institution.",
       measure: "nominal",
       format: "enum",
@@ -474,6 +533,7 @@ export const sod = defineDataset({
     }),
     fdicRegionName: defineField({
       type: "string",
+      label: "FDIC Region Name",
       description: "The name of the FDIC Regional Office that services the institution.",
       measure: "nominal",
       format: "text",
@@ -481,6 +541,7 @@ export const sod = defineDataset({
     }),
     federalReserveDistrict: defineField({
       type: "integer",
+      label: "Federal Reserve District",
       description: "The number identifying the Federal Reserve District where the institution is located.",
       measure: "nominal",
       format: "enum",
@@ -488,6 +549,7 @@ export const sod = defineDataset({
     }),
     federalReserveDistrictName: defineField({
       type: "string",
+      label: "Federal Reserve District Name",
       description: "The name of the Federal Reserve District where the institution is located.",
       measure: "nominal",
       format: "text",
@@ -495,6 +557,7 @@ export const sod = defineDataset({
     }),
     occDistrict: defineField({
       type: "integer",
+      label: "OCC District",
       description: "OCC district number in which the institution is located.",
       measure: "nominal",
       format: "enum",
@@ -503,6 +566,7 @@ export const sod = defineDataset({
     }),
     occDistrictName: defineField({
       type: "string",
+      label: "OCC District Name",
       description: "OCC district name.",
       measure: "nominal",
       format: "text",
@@ -510,6 +574,7 @@ export const sod = defineDataset({
     }),
     holdingCompanyRssdId: defineField({
       type: "integer",
+      label: "Holding Company RSSD ID",
       description: "The unique FRB number assigned to the top regulatory bank holding company.",
       measure: "nominal",
       format: "id",
@@ -517,6 +582,7 @@ export const sod = defineDataset({
     }),
     rssdId: defineField({
       type: "integer",
+      label: "RSSD ID",
       description: "The unique number assigned by the Federal Reserve Board to the institution.",
       measure: "nominal",
       format: "id",
@@ -524,6 +590,7 @@ export const sod = defineDataset({
     }),
     holdingCompanyState: defineField({
       type: "string",
+      label: "Holding Company State",
       description: "The state abbreviation of the headquarters of the top regulatory bank holding company.",
       measure: "nominal",
       format: "text",
@@ -531,6 +598,7 @@ export const sod = defineDataset({
     }),
     holdingCompanyCity: defineField({
       type: "string",
+      label: "Holding Company City",
       description: "The city of the headquarters of the top regulatory bank holding company.",
       measure: "nominal",
       format: "text",
@@ -542,6 +610,7 @@ export const sod = defineDataset({
     // -------------------------------------------------------------------------
     branchMsaNumber: defineField({
       type: "integer",
+      label: "Branch MSA Number",
       description: "Metropolitan Statistical Area number based on the 2020 Census.",
       measure: "nominal",
       format: "id",
@@ -549,6 +618,7 @@ export const sod = defineDataset({
     }),
     branchMsaName: defineField({
       type: "string",
+      label: "Branch MSA Name",
       description: "Metropolitan Statistical Area name in which the branch is physically located.",
       measure: "nominal",
       format: "text",
@@ -556,6 +626,7 @@ export const sod = defineDataset({
     }),
     branchMetro: defineField({
       type: "integer",
+      label: "Branch Metro Area",
       description: "Indicator for an area containing a core urban area of 50,000 or more population.",
       measure: "nominal",
       format: "boolean",
@@ -563,6 +634,7 @@ export const sod = defineDataset({
     }),
     branchMicro: defineField({
       type: "integer",
+      label: "Branch Micro Area",
       description: "Indicator for an area containing an urban core of at least 10,000 but less than 50,000 population.",
       measure: "nominal",
       format: "boolean",
@@ -570,6 +642,7 @@ export const sod = defineDataset({
     }),
     branchCsaNumber: defineField({
       type: "integer",
+      label: "Branch CSA Number",
       description: "Combined Statistical Area code for the branch.",
       measure: "nominal",
       format: "id",
@@ -577,6 +650,7 @@ export const sod = defineDataset({
     }),
     branchCsaName: defineField({
       type: "string",
+      label: "Branch CSA Name",
       description: "Combined Statistical Area name for the branch.",
       measure: "nominal",
       format: "text",
@@ -584,6 +658,7 @@ export const sod = defineDataset({
     }),
     branchCbsaDivisionName: defineField({
       type: "string",
+      label: "Branch CBSA Division Name",
       description: "Metropolitan Division name for the branch.",
       measure: "nominal",
       format: "text",
@@ -591,6 +666,7 @@ export const sod = defineDataset({
     }),
     branchMetroDivision: defineField({
       type: "string",
+      label: "Branch Metro Division",
       description: "Metropolitan Division — county or group of counties within a CBSA with a core population of at least 2.5 million.",
       measure: "nominal",
       format: "text",
@@ -598,6 +674,7 @@ export const sod = defineDataset({
     }),
     branchPlaceNumber: defineField({
       type: "integer",
+      label: "Branch FIPS MCD Code",
       description: "FIPS MCD (Minor Civil Division) code for the branch.",
       measure: "nominal",
       format: "id",
@@ -605,6 +682,7 @@ export const sod = defineDataset({
     }),
     branchNectaCode: defineField({
       type: "integer",
+      label: "Branch NECTA Code",
       description: "Code of the New England City Town Areas based on PLACENUM.",
       measure: "nominal",
       format: "id",
@@ -612,6 +690,7 @@ export const sod = defineDataset({
     }),
     branchNectaName: defineField({
       type: "string",
+      label: "Branch NECTA Name",
       description: "Name of the New England City Town Areas based on PLACENUM.",
       measure: "nominal",
       format: "text",
