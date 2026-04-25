@@ -3,6 +3,8 @@ import { useCallback, useState } from "react";
 import Composer from "~/domains/agent/ui/Composer";
 import MessageList from "~/domains/agent/ui/MessageList";
 import { useAgent } from "~/domains/agent/hooks/useAgent";
+import DataBootstrapPanel from "~/domains/layout/ui/DataBootstrapPanel";
+import { useDataStatus } from "~/lib/useDataStatus";
 
 const SUGGESTIONS = [
   "Which states have the most credit unions?",
@@ -27,7 +29,23 @@ export default function ChatLanding() {
 
   const onSubmit = useCallback(() => send(input), [input, send]);
 
+  const dataStatus = useDataStatus();
   const isEmpty = messages.length === 0;
+
+  if (isEmpty && dataStatus !== "ready") {
+    return (
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        h="full"
+        w="full"
+        px="6"
+      >
+        <DataBootstrapPanel />
+      </Flex>
+    );
+  }
 
   if (isEmpty) {
     return (

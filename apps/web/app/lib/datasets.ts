@@ -7,6 +7,10 @@ import {
 } from "@bankql/schema";
 import { getDB } from "~/lib/duckdb";
 import {
+  initDatasetLoads,
+  updateDatasetLoad,
+} from "~/lib/datasetLoad";
+import {
   readCache,
   readMeta,
   writeCache,
@@ -57,15 +61,18 @@ async function run(): Promise<void> {
     const active = (allDatasets as unknown as DatasetDef[]).filter(
       (d) => !UNPUBLISHED.has(d.name),
     );
+    initDatasetLoads(active.map((d) => d.name));
     await initTables(active);
     await createViews(active);
     const results = await Promise.allSettled(active.map(loadDataset));
     results.forEach((r, i) => {
       if (r.status === "rejected") {
-        console.warn(
-          `Dataset "${active[i].name}" failed to load:`,
-          r.reason,
-        );
+        const name = active[i].name;
+        console.warn(`Dataset "${name}" failed to load:`, r.reason);
+        updateDatasetLoad(name, {
+          phase: "error",
+          error: r.reason instanceof Error ? r.reason.message : String(r.reason),
+        });
       }
     });
     resolveDataReady();
@@ -111,12 +118,42 @@ function manifestUrl(name: string): string {
   return `${BASE_URL}/datasets/${name}/latest/manifest.json`;
 }
 
-async function fetchParquet(name: string): Promise<Uint8Array> {
+async function fetchParquet(
+  name: string,
+  onProgress?: (bytesLoaded: number, bytesTotal?: number) => void,
+): Promise<Uint8Array> {
   const res = await fetch(datasetUrl(name));
   if (!res.ok) {
     throw new Error(`Failed to fetch ${name}.parquet: ${res.status}`);
   }
-  return new Uint8Array(await res.arrayBuffer());
+
+  const totalHeader = res.headers.get("content-length");
+  const total = totalHeader ? Number(totalHeader) : undefined;
+  const reader = res.body?.getReader();
+
+  if (!reader) {
+    const buffer = new Uint8Array(await res.arrayBuffer());
+    onProgress?.(buffer.byteLength, buffer.byteLength);
+    return buffer;
+  }
+
+  const chunks: Uint8Array[] = [];
+  let received = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    received += value.byteLength;
+    onProgress?.(received, total);
+  }
+
+  const buffer = new Uint8Array(received);
+  let offset = 0;
+  for (const chunk of chunks) {
+    buffer.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return buffer;
 }
 
 async function fetchManifest(name: string): Promise<ServerManifest | null> {
@@ -180,6 +217,12 @@ async function loadDataset(dataset: DatasetDef): Promise<void> {
       const cached = await readCache(name);
       if (cached) {
         try {
+          updateDatasetLoad(name, {
+            phase: "loading",
+            source: "cache",
+            bytesLoaded: cached.byteLength,
+            bytesTotal: cached.byteLength,
+          });
           const rows = await loadIntoTable(dataset, cached);
           if (rows === 0) {
             console.warn(`OPFS: ${name} cache produced 0 rows, refetching`);
@@ -189,6 +232,11 @@ async function loadDataset(dataset: DatasetDef): Promise<void> {
             console.log(
               `DuckDB: ${name} — ${rows} rows (${sizeMB}MB) — OPFS cache in ${(performance.now() - t0).toFixed(0)}ms`,
             );
+            updateDatasetLoad(name, {
+              phase: "ready",
+              rows,
+              elapsedMs: performance.now() - t0,
+            });
             if (!isFresh(meta)) {
               refreshInBackground(dataset, expected.hash).catch(() => {});
             }
@@ -207,15 +255,36 @@ async function loadDataset(dataset: DatasetDef): Promise<void> {
     console.warn(
       `Dataset "${name}" schema drift: client ${expected.short} vs published ${manifest.schemaHashShort}. Skipping load — run ETL to republish.`,
     );
+    updateDatasetLoad(name, {
+      phase: "error",
+      error: `schema drift (client ${expected.short} / server ${manifest.schemaHashShort})`,
+    });
     return;
   }
 
-  const buffer = await fetchParquet(name);
+  updateDatasetLoad(name, {
+    phase: "fetching",
+    source: "network",
+    bytesTotal: manifest?.size,
+  });
+  const buffer = await fetchParquet(name, (bytesLoaded, bytesTotal) => {
+    updateDatasetLoad(name, { bytesLoaded, bytesTotal });
+  });
+  updateDatasetLoad(name, {
+    phase: "loading",
+    bytesLoaded: buffer.byteLength,
+    bytesTotal: buffer.byteLength,
+  });
   const rows = await loadIntoTable(dataset, buffer);
   const sizeMB = (buffer.byteLength / 1024 / 1024).toFixed(2);
   console.log(
     `DuckDB: ${name} — ${rows} rows (${sizeMB}MB) — from blob in ${(performance.now() - t0).toFixed(0)}ms`,
   );
+  updateDatasetLoad(name, {
+    phase: "ready",
+    rows,
+    elapsedMs: performance.now() - t0,
+  });
   writeCache(name, buffer, expected.hash).catch((err) =>
     console.warn(`OPFS: failed to cache ${name}`, err),
   );
