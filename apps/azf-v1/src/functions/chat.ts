@@ -4,11 +4,12 @@ import {
   toolDefinition,
   toServerSentEventsStream,
 } from "@tanstack/ai";
-import { queryDataToolSpec } from "@bankql/schema";
+import { queryDataToolSpec, renderTileToolSpec } from "@bankql/schema";
 import { anthropicAzureFoundry } from "../lib/anthropicAzureFoundry.js";
 import { buildSystemPrompt } from "../lib/systemPrompt.js";
 
 const queryDataDef = toolDefinition(queryDataToolSpec);
+const renderTileDef = toolDefinition(renderTileToolSpec);
 
 type ChatAdapter = ReturnType<typeof anthropicAzureFoundry>;
 type ChatMessages = NonNullable<
@@ -27,7 +28,7 @@ export async function chatHandler(
   const stream = chat({
     adapter: anthropicAzureFoundry(),
     messages: body.messages,
-    tools: [queryDataDef],
+    tools: [queryDataDef, renderTileDef],
     systemPrompts: [buildSystemPrompt()],
   });
 

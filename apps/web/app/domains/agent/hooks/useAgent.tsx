@@ -8,9 +8,10 @@ import {
   type ReactNode,
 } from "react";
 import { queryDataClient } from "~/domains/agent/api/queryDataTool";
+import { renderTileClient } from "~/domains/agent/api/renderTileTool";
 import { getVisitorId } from "~/lib/visitor";
 
-const tools = clientTools(queryDataClient);
+const tools = clientTools(queryDataClient, renderTileClient);
 
 const CHAT_URL =
   import.meta.env.VITE_CHAT_URL ??

@@ -54,3 +54,13 @@ export {
   queryDataOutputSchema,
 } from "./agent/queryDataTool.js";
 export type { QueryDataInput, QueryDataOutput } from "./agent/queryDataTool.js";
+
+export {
+  renderTileToolSpec,
+  renderTileInputSchema,
+  renderTileOutputSchema,
+} from "./agent/renderTileTool.js";
+export type {
+  RenderTileInput,
+  RenderTileOutput,
+} from "./agent/renderTileTool.js";

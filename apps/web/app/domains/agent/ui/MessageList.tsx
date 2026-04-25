@@ -11,6 +11,8 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prose } from "~/lib/prose";
 import type { MessagePart, UIMessage } from "@tanstack/ai-client";
+import type { RenderTileOutput, TileConfig } from "@bankql/schema";
+import TileRenderer from "~/domains/agent/ui/TileRenderer";
 
 export default function MessageList({ messages }: { messages: UIMessage[] }) {
   return (
@@ -58,15 +60,40 @@ function PartView({ part, isUser }: { part: MessagePart; isUser: boolean }) {
         </Prose>
       );
     case "tool-call": {
+      const toolName = (part as { toolName?: string }).toolName ?? "";
+      const input = part.input as Record<string, unknown> | undefined;
+      if (toolName === "render_tile") {
+        const config = input?.config as TileConfig | undefined;
+        const preview = config?.title ?? "";
+        const body = JSON.stringify(config ?? {}, null, 2);
+        return (
+          <ToolPartCollapsible
+            label="render_tile"
+            preview={preview}
+            body={body}
+          />
+        );
+      }
       const sql =
-        part.input && typeof part.input === "object" && "sql" in part.input
-          ? String((part.input as { sql: unknown }).sql)
+        input && "sql" in input
+          ? String((input as { sql: unknown }).sql)
           : String(part.arguments ?? "");
       return (
         <ToolPartCollapsible label="query_data" preview={sql} body={sql} />
       );
     }
     case "tool-result": {
+      const toolName = (part as { toolName?: string }).toolName ?? "";
+      if (
+        toolName === "render_tile" &&
+        part.state !== "error" &&
+        part.content
+      ) {
+        const tile = parseRenderTileResult(part.content);
+        if (tile) {
+          return <TileRenderer config={tile.config} rows={tile.rows} />;
+        }
+      }
       const body = String(part.error ?? part.content ?? "");
       const label = part.state === "error" ? "error" : "result";
       return <ToolPartCollapsible label={label} preview={body} body={body} />;
@@ -80,6 +107,24 @@ function PartView({ part, isUser }: { part: MessagePart; isUser: boolean }) {
     default:
       return null;
   }
+}
+
+function parseRenderTileResult(content: unknown): RenderTileOutput | null {
+  try {
+    const parsed =
+      typeof content === "string" ? JSON.parse(content) : content;
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "config" in parsed &&
+      "rows" in parsed
+    ) {
+      return parsed as RenderTileOutput;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 function ToolPartCollapsible({
