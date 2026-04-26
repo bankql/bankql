@@ -1,16 +1,18 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { nic_relationships } from "@bankql/schema";
-import { downloadZipAndExtractCsv } from "../lib/bulk-download.js";
+import { extractCsvFromZip, stripHeaderHashPrefix } from "../lib/bulk-download.js";
 import { csvToParquet } from "../lib/duckdb-writer.js";
+import { downloadNicZips, NIC_ENDPOINTS } from "../lib/nic-downloader.js";
 import { config } from "../lib/config.js";
 
-const NIC_RELATIONSHIPS_ZIP_URL =
-  "https://www.ffiec.gov/nicpubweb/content/NICXMLDATA/NIC_Relationships.zip";
-
 export async function run() {
+  const zipPath = path.join(config.rawDir, "nic_relationships.zip");
   const csvPath = path.join(config.rawDir, "nic_relationships.csv");
-  await downloadZipAndExtractCsv(NIC_RELATIONSHIPS_ZIP_URL, csvPath, "NIC_Relationships.csv");
+
+  await downloadNicZips([{ endpoint: NIC_ENDPOINTS.relationships, outPath: zipPath }]);
+  await extractCsvFromZip(zipPath, csvPath);
+  await stripHeaderHashPrefix(csvPath);
   await csvToParquet(nic_relationships, csvPath, config.outputDir);
 }
 

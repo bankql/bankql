@@ -28,12 +28,32 @@ export async function downloadZipAndExtractCsv(
     createWriteStream(zipPath),
   );
 
-  console.log(`[bulk-download] Extracting ZIP...`);
+  await extractCsvFromZip(zipPath, outPath, entryFilename);
+  await fs.unlink(zipPath);
+  return outPath;
+}
+
+/**
+ * Extract a CSV entry from an existing ZIP file on disk to `outPath`.
+ * Picks the entry matching `entryFilename` (basename or full path), or
+ * falls back to the first `.csv` entry.
+ */
+export async function extractCsvFromZip(
+  zipPath: string,
+  outPath: string,
+  entryFilename?: string,
+): Promise<string> {
+  await fs.mkdir(path.dirname(outPath), { recursive: true });
+  console.log(`[bulk-download] Extracting ${zipPath}...`);
   const zip = new AdmZip(zipPath);
   const entries = zip.getEntries();
 
   const entry = entryFilename
-    ? entries.find((e) => e.entryName === entryFilename || path.basename(e.entryName) === entryFilename)
+    ? entries.find(
+        (e) =>
+          e.entryName === entryFilename ||
+          path.basename(e.entryName) === entryFilename,
+      )
     : entries.find((e) => e.entryName.toLowerCase().endsWith(".csv"));
 
   if (!entry) {
@@ -42,8 +62,19 @@ export async function downloadZipAndExtractCsv(
   }
 
   await fs.writeFile(outPath, entry.getData());
-  await fs.unlink(zipPath);
-
   console.log(`[bulk-download] Extracted ${entry.entryName} → ${outPath}`);
   return outPath;
+}
+
+/**
+ * FFIEC NIC CSVs prefix the first header column with `#` (e.g.
+ * `#ID_RSSD_PARENT`). Strip it in-place so DuckDB can bind by source key.
+ */
+export async function stripHeaderHashPrefix(csvPath: string): Promise<void> {
+  const buf = await fs.readFile(csvPath);
+  if (buf.length === 0 || buf[0] !== 0x23 /* '#' */) return;
+  const newlineIdx = buf.indexOf(0x0a);
+  if (newlineIdx === -1) return;
+  const cleaned = Buffer.concat([buf.subarray(1, newlineIdx), buf.subarray(newlineIdx)]);
+  await fs.writeFile(csvPath, cleaned);
 }

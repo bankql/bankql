@@ -42,12 +42,15 @@ function buildCastSelect(dataset: DatasetDef): string {
  */
 export async function csvToParquet(
   dataset: DatasetDef,
-  csvPath: string,
+  csvPath: string | string[],
   outputDir: string,
 ): Promise<{ parquetPath: string }> {
   await fs.mkdir(outputDir, { recursive: true });
 
   const parquetPath = path.join(outputDir, `${dataset.name}.parquet`);
+  const csvList = Array.isArray(csvPath) ? csvPath : [csvPath];
+  const csvSqlList = `[${csvList.map((p) => `'${p}'`).join(", ")}]`;
+  const unionByName = csvList.length > 1 ? ", union_by_name=true" : "";
 
   const db = await Database.create(":memory:");
   const conn = await db.connect();
@@ -68,11 +71,11 @@ export async function csvToParquet(
       `INSERT INTO "${dataset.name}"
        SELECT ${castSelect}
        FROM read_csv(
-         '${csvPath}',
+         ${csvSqlList},
          header=true,
          null_padding=true,
          all_varchar=true,
-         nullstr=['', '9999-12-31', '01/01/9999']
+         nullstr=['', '9999-12-31', '01/01/9999']${unionByName}
        )`,
     );
 

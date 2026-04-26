@@ -1,19 +1,37 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { nic_attributes } from "@bankql/schema";
-import { downloadZipAndExtractCsv } from "../lib/bulk-download.js";
+import { extractCsvFromZip, stripHeaderHashPrefix } from "../lib/bulk-download.js";
 import { csvToParquet } from "../lib/duckdb-writer.js";
+import { downloadNicZips, NIC_ENDPOINTS } from "../lib/nic-downloader.js";
 import { config } from "../lib/config.js";
 
-// NOTE: Verify this URL is directly fetchable from Node without browser cookies.
-// If FFIEC requires click-through, use the FRB alternate NIC data portal.
-const NIC_ATTRIBUTES_ZIP_URL =
-  "https://www.ffiec.gov/nicpubweb/content/NICXMLDATA/NIC_Attributes.zip";
+// FFIEC publishes attributes split into three CSVs: active institutions,
+// closed institutions, and branches. They share the same schema, so we
+// union them into a single nic_attributes parquet.
+const SOURCES = [
+  { endpoint: NIC_ENDPOINTS.attributesActive, slug: "active" },
+  { endpoint: NIC_ENDPOINTS.attributesClosed, slug: "closed" },
+  { endpoint: NIC_ENDPOINTS.attributesBranches, slug: "branches" },
+] as const;
 
 export async function run() {
-  const csvPath = path.join(config.rawDir, "nic_attributes.csv");
-  await downloadZipAndExtractCsv(NIC_ATTRIBUTES_ZIP_URL, csvPath, "NIC_Attributes.csv");
-  await csvToParquet(nic_attributes, csvPath, config.outputDir);
+  const downloads = SOURCES.map(({ endpoint, slug }) => ({
+    endpoint,
+    outPath: path.join(config.rawDir, `nic_attributes_${slug}.zip`),
+  }));
+  await downloadNicZips(downloads);
+
+  const csvPaths: string[] = [];
+  for (const { slug } of SOURCES) {
+    const zipPath = path.join(config.rawDir, `nic_attributes_${slug}.zip`);
+    const csvPath = path.join(config.rawDir, `nic_attributes_${slug}.csv`);
+    await extractCsvFromZip(zipPath, csvPath);
+    await stripHeaderHashPrefix(csvPath);
+    csvPaths.push(csvPath);
+  }
+
+  await csvToParquet(nic_attributes, csvPaths, config.outputDir);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) run().catch(console.error);
