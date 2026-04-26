@@ -8,7 +8,14 @@ const PAGE_SIZE = 10_000;
 /**
  * Endpoint names on the FDIC BankFind API.
  */
-export type FdicEndpoint = "institutions" | "locations" | "history";
+export type FdicEndpoint = "institutions" | "locations" | "history" | "sod";
+
+export interface FetchOptions {
+  /** FDIC `filters` query string, e.g. `YEAR:2024`. */
+  filters?: string;
+  /** Label used in log lines so we can tell parallel/sequential fetches apart. */
+  label?: string;
+}
 
 /**
  * Fetch all pages from a FDIC BankFind API endpoint and write to a CSV file.
@@ -18,6 +25,7 @@ export async function fetchFdicApiToCsv(
   endpoint: FdicEndpoint,
   dataset: DatasetDef,
   outPath: string,
+  options: FetchOptions = {},
 ): Promise<string> {
   const sourceKeys = Object.entries(dataset.fields).map(
     ([key, field]) => field.sourceKey ?? key,
@@ -26,8 +34,9 @@ export async function fetchFdicApiToCsv(
   const rows: string[][] = [];
   let offset = 0;
   let isFirst = true;
+  const label = options.label ?? endpoint;
 
-  console.log(`[fdic-api] Fetching ${endpoint}...`);
+  console.log(`[fdic-api] Fetching ${label}...`);
 
   while (true) {
     const url = new URL(`${FDIC_API_BASE}/${endpoint}`);
@@ -35,6 +44,7 @@ export async function fetchFdicApiToCsv(
     url.searchParams.set("limit", String(PAGE_SIZE));
     url.searchParams.set("offset", String(offset));
     url.searchParams.set("output", "json");
+    if (options.filters) url.searchParams.set("filters", options.filters);
 
     const res = await fetch(url.toString());
     if (!res.ok) {
@@ -55,7 +65,7 @@ export async function fetchFdicApiToCsv(
       rows.push(sourceKeys.map((k) => formatCsvValue(row[k])));
     }
 
-    console.log(`[fdic-api]   offset=${offset} got ${page.length} rows`);
+    console.log(`[fdic-api]   ${label} offset=${offset} got ${page.length} rows`);
 
     if (page.length < PAGE_SIZE) break;
     offset += PAGE_SIZE;

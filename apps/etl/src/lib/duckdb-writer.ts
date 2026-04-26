@@ -40,14 +40,21 @@ function buildCastSelect(dataset: DatasetDef): string {
  *
  * Note: Arrow IPC COPY is not available in DuckDB 1.4.x without the Arrow extension.
  */
+export interface CsvToParquetOptions {
+  /** Override the parquet file name (without `.parquet`). Defaults to dataset.name. */
+  parquetName?: string;
+}
+
 export async function csvToParquet(
   dataset: DatasetDef,
   csvPath: string | string[],
   outputDir: string,
+  options: CsvToParquetOptions = {},
 ): Promise<{ parquetPath: string }> {
   await fs.mkdir(outputDir, { recursive: true });
 
-  const parquetPath = path.join(outputDir, `${dataset.name}.parquet`);
+  const parquetName = options.parquetName ?? dataset.name;
+  const parquetPath = path.join(outputDir, `${parquetName}.parquet`);
   const csvList = Array.isArray(csvPath) ? csvPath : [csvPath];
   const csvSqlList = `[${csvList.map((p) => `'${p}'`).join(", ")}]`;
   const unionByName = csvList.length > 1 ? ", union_by_name=true" : "";
