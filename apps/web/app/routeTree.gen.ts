@@ -8,89 +8,115 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LayoutRouteImport } from './routes/_layout'
+import { Route as LayoutIndexRouteImport } from './routes/_layout.index'
+import { Route as LayoutAboutRouteImport } from './routes/_layout.about'
+import { Route as LayoutDatasetsNameRouteImport } from './routes/_layout.datasets.$name'
+import { Route as LayoutDatasetsNameIdRouteImport } from './routes/_layout.datasets.$name.$id'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as LayoutIndexImport } from './routes/_layout.index'
-import { Route as LayoutAboutImport } from './routes/_layout.about'
-import { Route as LayoutDatasetsNameImport } from './routes/_layout.datasets.$name'
-import { Route as LayoutDatasetsNameIdImport } from './routes/_layout.datasets.$name.$id'
-
-// Create/Update Routes
-
-const LayoutRoute = LayoutImport.update({
+const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LayoutIndexRoute = LayoutIndexImport.update({
+const LayoutIndexRoute = LayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
-
-const LayoutAboutRoute = LayoutAboutImport.update({
+const LayoutAboutRoute = LayoutAboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => LayoutRoute,
 } as any)
-
-const LayoutDatasetsNameRoute = LayoutDatasetsNameImport.update({
+const LayoutDatasetsNameRoute = LayoutDatasetsNameRouteImport.update({
   id: '/datasets/$name',
   path: '/datasets/$name',
   getParentRoute: () => LayoutRoute,
 } as any)
-
-const LayoutDatasetsNameIdRoute = LayoutDatasetsNameIdImport.update({
+const LayoutDatasetsNameIdRoute = LayoutDatasetsNameIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => LayoutDatasetsNameRoute,
 } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof LayoutIndexRoute
+  '/about': typeof LayoutAboutRoute
+  '/datasets/$name': typeof LayoutDatasetsNameRouteWithChildren
+  '/datasets/$name/$id': typeof LayoutDatasetsNameIdRoute
+}
+export interface FileRoutesByTo {
+  '/about': typeof LayoutAboutRoute
+  '/': typeof LayoutIndexRoute
+  '/datasets/$name': typeof LayoutDatasetsNameRouteWithChildren
+  '/datasets/$name/$id': typeof LayoutDatasetsNameIdRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/_layout': typeof LayoutRouteWithChildren
+  '/_layout/about': typeof LayoutAboutRoute
+  '/_layout/': typeof LayoutIndexRoute
+  '/_layout/datasets/$name': typeof LayoutDatasetsNameRouteWithChildren
+  '/_layout/datasets/$name/$id': typeof LayoutDatasetsNameIdRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/about' | '/datasets/$name' | '/datasets/$name/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/about' | '/' | '/datasets/$name' | '/datasets/$name/$id'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/_layout/about'
+    | '/_layout/'
+    | '/_layout/datasets/$name'
+    | '/_layout/datasets/$name/$id'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  LayoutRoute: typeof LayoutRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/_layout': {
       id: '/_layout'
       path: ''
-      fullPath: ''
-      preLoaderRoute: typeof LayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/_layout/about': {
-      id: '/_layout/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof LayoutAboutImport
-      parentRoute: typeof LayoutImport
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_layout/': {
       id: '/_layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof LayoutIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/about': {
+      id: '/_layout/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof LayoutAboutRouteImport
+      parentRoute: typeof LayoutRoute
     }
     '/_layout/datasets/$name': {
       id: '/_layout/datasets/$name'
       path: '/datasets/$name'
       fullPath: '/datasets/$name'
-      preLoaderRoute: typeof LayoutDatasetsNameImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof LayoutDatasetsNameRouteImport
+      parentRoute: typeof LayoutRoute
     }
     '/_layout/datasets/$name/$id': {
       id: '/_layout/datasets/$name/$id'
       path: '/$id'
       fullPath: '/datasets/$name/$id'
-      preLoaderRoute: typeof LayoutDatasetsNameIdImport
-      parentRoute: typeof LayoutDatasetsNameImport
+      preLoaderRoute: typeof LayoutDatasetsNameIdRouteImport
+      parentRoute: typeof LayoutDatasetsNameRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface LayoutDatasetsNameRouteChildren {
   LayoutDatasetsNameIdRoute: typeof LayoutDatasetsNameIdRoute
@@ -118,93 +144,18 @@ const LayoutRouteChildren: LayoutRouteChildren = {
 const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
-export interface FileRoutesByFullPath {
-  '': typeof LayoutRouteWithChildren
-  '/about': typeof LayoutAboutRoute
-  '/': typeof LayoutIndexRoute
-  '/datasets/$name': typeof LayoutDatasetsNameRouteWithChildren
-  '/datasets/$name/$id': typeof LayoutDatasetsNameIdRoute
-}
-
-export interface FileRoutesByTo {
-  '/about': typeof LayoutAboutRoute
-  '/': typeof LayoutIndexRoute
-  '/datasets/$name': typeof LayoutDatasetsNameRouteWithChildren
-  '/datasets/$name/$id': typeof LayoutDatasetsNameIdRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_layout': typeof LayoutRouteWithChildren
-  '/_layout/about': typeof LayoutAboutRoute
-  '/_layout/': typeof LayoutIndexRoute
-  '/_layout/datasets/$name': typeof LayoutDatasetsNameRouteWithChildren
-  '/_layout/datasets/$name/$id': typeof LayoutDatasetsNameIdRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/about' | '/' | '/datasets/$name' | '/datasets/$name/$id'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/' | '/datasets/$name' | '/datasets/$name/$id'
-  id:
-    | '__root__'
-    | '/_layout'
-    | '/_layout/about'
-    | '/_layout/'
-    | '/_layout/datasets/$name'
-    | '/_layout/datasets/$name/$id'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  LayoutRoute: typeof LayoutRouteWithChildren
-}
-
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_layout"
-      ]
-    },
-    "/_layout": {
-      "filePath": "_layout.tsx",
-      "children": [
-        "/_layout/about",
-        "/_layout/",
-        "/_layout/datasets/$name"
-      ]
-    },
-    "/_layout/about": {
-      "filePath": "_layout.about.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/": {
-      "filePath": "_layout.index.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/datasets/$name": {
-      "filePath": "_layout.datasets.$name.tsx",
-      "parent": "/_layout",
-      "children": [
-        "/_layout/datasets/$name/$id"
-      ]
-    },
-    "/_layout/datasets/$name/$id": {
-      "filePath": "_layout.datasets.$name.$id.tsx",
-      "parent": "/_layout/datasets/$name"
-    }
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
-ROUTE_MANIFEST_END */

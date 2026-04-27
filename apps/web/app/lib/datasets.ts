@@ -26,7 +26,6 @@ const BASE_URL =
 // Remove from this set as each ETL comes online. See apps/etl/CLAUDE.md
 // "Known Issues" for the current status of each source.
 const UNPUBLISHED = new Set([
-  "sod",
   "nic_attributes",
   "nic_relationships",
   "nic_transformations",
@@ -36,6 +35,11 @@ const UNPUBLISHED = new Set([
   // the agent can join branch coords against `locations` on uninum.
   "location_coordinates",
 ]);
+
+// Datasets whose blob layout is one parquet per partition key (e.g. SOD by
+// year) plus a manifest listing partitions. Bootstrap loads only the
+// "latest" partition; older partitions are lazy-loaded on demand.
+const PARTITIONED = new Set(["sod"]);
 
 export function isDatasetPublished(name: string): boolean {
   return !UNPUBLISHED.has(name);
@@ -50,6 +54,14 @@ interface ServerManifest {
   schemaHash: string;
   schemaHashShort: string;
   size: number;
+  uploadedAt: string;
+}
+
+interface PartitionedManifest {
+  name: string;
+  schemaHash: string;
+  schemaHashShort: string;
+  partitions: Array<{ key: string; size: number }>;
   uploadedAt: string;
 }
 
@@ -75,7 +87,13 @@ async function run(): Promise<void> {
     initDatasetLoads(active.map((d) => d.name));
     await initTables(active);
     await createViews(active);
-    const results = await Promise.allSettled(active.map(loadDataset));
+    const results = await Promise.allSettled(
+      active.map((d) =>
+        PARTITIONED.has(d.name)
+          ? bootstrapPartitionedDataset(d)
+          : loadDataset(d),
+      ),
+    );
     results.forEach((r, i) => {
       if (r.status === "rejected") {
         const name = active[i].name;
@@ -125,17 +143,22 @@ function datasetUrl(name: string): string {
   return `${BASE_URL}/datasets/${name}/latest/${name}.parquet`;
 }
 
+function partitionUrl(name: string, key: string): string {
+  return `${BASE_URL}/datasets/${name}/latest/${key}.parquet`;
+}
+
 function manifestUrl(name: string): string {
   return `${BASE_URL}/datasets/${name}/latest/manifest.json`;
 }
 
-async function fetchParquet(
-  name: string,
+async function fetchParquetFromUrl(
+  url: string,
+  label: string,
   onProgress?: (bytesLoaded: number, bytesTotal?: number) => void,
 ): Promise<Uint8Array> {
-  const res = await fetch(datasetUrl(name));
+  const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Failed to fetch ${name}.parquet: ${res.status}`);
+    throw new Error(`Failed to fetch ${label}: ${res.status}`);
   }
 
   const totalHeader = res.headers.get("content-length");
@@ -167,11 +190,30 @@ async function fetchParquet(
   return buffer;
 }
 
+async function fetchParquet(
+  name: string,
+  onProgress?: (bytesLoaded: number, bytesTotal?: number) => void,
+): Promise<Uint8Array> {
+  return fetchParquetFromUrl(datasetUrl(name), `${name}.parquet`, onProgress);
+}
+
 async function fetchManifest(name: string): Promise<ServerManifest | null> {
   try {
     const res = await fetch(manifestUrl(name), { cache: "no-store" });
     if (!res.ok) return null;
     return (await res.json()) as ServerManifest;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchPartitionedManifest(
+  name: string,
+): Promise<PartitionedManifest | null> {
+  try {
+    const res = await fetch(manifestUrl(name), { cache: "no-store" });
+    if (!res.ok) return null;
+    return (await res.json()) as PartitionedManifest;
   } catch {
     return null;
   }
@@ -321,4 +363,187 @@ async function refreshInBackground(
   } catch (err) {
     console.warn(`DuckDB: ${name} — background refresh failed`, err);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Partitioned datasets (currently SOD by year)
+// ---------------------------------------------------------------------------
+
+const partitionedManifestCache = new Map<string, PartitionedManifest>();
+const loadedPartitions = new Map<string, Set<string>>();
+const inflightPartitionLoads = new Map<string, Promise<void>>();
+
+function partitionCacheKey(name: string, key: string): string {
+  return `${name}__${key}`;
+}
+
+function rememberPartition(name: string, key: string): void {
+  let set = loadedPartitions.get(name);
+  if (!set) {
+    set = new Set();
+    loadedPartitions.set(name, set);
+  }
+  set.add(key);
+}
+
+export function isPartitionLoaded(name: string, key: string): boolean {
+  return loadedPartitions.get(name)?.has(key) ?? false;
+}
+
+export function getLoadedPartitions(name: string): string[] {
+  const set = loadedPartitions.get(name);
+  return set ? [...set] : [];
+}
+
+async function bootstrapPartitionedDataset(dataset: DatasetDef): Promise<void> {
+  const { name } = dataset;
+  const t0 = performance.now();
+  const expected = await hashDataset(dataset);
+
+  const manifest = await fetchPartitionedManifest(name);
+  if (!manifest) {
+    updateDatasetLoad(name, {
+      phase: "error",
+      error: "manifest not found",
+    });
+    return;
+  }
+  partitionedManifestCache.set(name, manifest);
+
+  if (manifest.schemaHash !== expected.hash) {
+    console.warn(
+      `Dataset "${name}" schema drift: client ${expected.short} vs published ${manifest.schemaHashShort}. Skipping load — run ETL to republish.`,
+    );
+    updateDatasetLoad(name, {
+      phase: "error",
+      error: `schema drift (client ${expected.short} / server ${manifest.schemaHashShort})`,
+    });
+    return;
+  }
+
+  const latestKey = pickLatestPartitionKey(manifest);
+  if (!latestKey) {
+    updateDatasetLoad(name, { phase: "error", error: "manifest has no partitions" });
+    return;
+  }
+
+  await loadPartitionInternal(dataset, latestKey, expected.hash, t0);
+}
+
+function pickLatestPartitionKey(manifest: PartitionedManifest): string | null {
+  if (manifest.partitions.length === 0) return null;
+  return manifest.partitions
+    .map((p) => p.key)
+    .sort((a, b) => Number(b) - Number(a) || (a < b ? 1 : a > b ? -1 : 0))[0];
+}
+
+/**
+ * Lazy-load a SOD year (or any partitioned dataset partition) into the table.
+ * Idempotent — a no-op if the partition is already loaded in this session.
+ */
+export async function loadPartition(
+  datasetName: string,
+  partitionKey: string,
+): Promise<void> {
+  if (!PARTITIONED.has(datasetName)) {
+    throw new Error(`Dataset "${datasetName}" is not partitioned`);
+  }
+  if (isPartitionLoaded(datasetName, partitionKey)) return;
+
+  const inflightKey = partitionCacheKey(datasetName, partitionKey);
+  const existing = inflightPartitionLoads.get(inflightKey);
+  if (existing) return existing;
+
+  const dataset = (allDatasets as unknown as DatasetDef[]).find(
+    (d) => d.name === datasetName,
+  );
+  if (!dataset) throw new Error(`Unknown dataset "${datasetName}"`);
+
+  const expected = await hashDataset(dataset);
+  const promise = (async () => {
+    const t0 = performance.now();
+    await loadPartitionInternal(dataset, partitionKey, expected.hash, t0);
+  })();
+  inflightPartitionLoads.set(inflightKey, promise);
+  try {
+    await promise;
+  } finally {
+    inflightPartitionLoads.delete(inflightKey);
+  }
+}
+
+export const loadSodYear = (year: number) => loadPartition("sod", String(year));
+
+async function loadPartitionInternal(
+  dataset: DatasetDef,
+  partitionKey: string,
+  expectedHash: string,
+  t0: number,
+): Promise<void> {
+  const { name } = dataset;
+  const cacheKey = partitionCacheKey(name, partitionKey);
+
+  const meta = await readMeta(cacheKey);
+  if (meta && meta.schemaHash === expectedHash) {
+    const cached = await readCache(cacheKey);
+    if (cached) {
+      try {
+        updateDatasetLoad(name, {
+          phase: "loading",
+          source: "cache",
+          bytesLoaded: cached.byteLength,
+          bytesTotal: cached.byteLength,
+        });
+        const rows = await loadIntoTable(dataset, cached);
+        if (rows > 0) {
+          rememberPartition(name, partitionKey);
+          const sizeMB = (cached.byteLength / 1024 / 1024).toFixed(2);
+          console.log(
+            `DuckDB: ${name}[${partitionKey}] — ${rows} rows (${sizeMB}MB) — OPFS cache in ${(performance.now() - t0).toFixed(0)}ms`,
+          );
+          updateDatasetLoad(name, {
+            phase: "ready",
+            rows,
+            elapsedMs: performance.now() - t0,
+          });
+          return;
+        }
+        await deleteEntry(cacheKey);
+      } catch (err) {
+        console.warn(`OPFS: ${cacheKey} cache corrupt, refetching`, err);
+        await deleteEntry(cacheKey);
+      }
+    }
+  } else if (meta) {
+    await deleteEntry(cacheKey);
+  }
+
+  updateDatasetLoad(name, { phase: "fetching", source: "network" });
+  const url = partitionUrl(name, partitionKey);
+  const buffer = await fetchParquetFromUrl(
+    url,
+    `${name}/${partitionKey}.parquet`,
+    (bytesLoaded, bytesTotal) => {
+      updateDatasetLoad(name, { bytesLoaded, bytesTotal });
+    },
+  );
+  updateDatasetLoad(name, {
+    phase: "loading",
+    bytesLoaded: buffer.byteLength,
+    bytesTotal: buffer.byteLength,
+  });
+  const rows = await loadIntoTable(dataset, buffer);
+  rememberPartition(name, partitionKey);
+  const sizeMB = (buffer.byteLength / 1024 / 1024).toFixed(2);
+  console.log(
+    `DuckDB: ${name}[${partitionKey}] — ${rows} rows (${sizeMB}MB) — from blob in ${(performance.now() - t0).toFixed(0)}ms`,
+  );
+  updateDatasetLoad(name, {
+    phase: "ready",
+    rows,
+    elapsedMs: performance.now() - t0,
+  });
+  writeCache(cacheKey, buffer, expectedHash).catch((err) =>
+    console.warn(`OPFS: failed to cache ${cacheKey}`, err),
+  );
 }

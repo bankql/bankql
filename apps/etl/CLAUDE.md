@@ -50,6 +50,14 @@ datasets/{name}/YYYY-MM-DD/{name}.parquet   ← dated archive
 datasets/{name}/latest/{name}.parquet       ← always current
 ```
 
+Partitioned datasets (currently `sod`) write one parquet per partition key plus a manifest listing them:
+```
+datasets/sod/YYYY-MM-DD/{year}.parquet      ← dated archive per year
+datasets/sod/latest/{year}.parquet          ← always current per year
+datasets/sod/latest/manifest.json           ← schema hash + partition list
+```
+The web app reads the manifest, init-loads only the latest partition (newest year), and lazy-loads the rest on demand — see `apps/web/app/lib/datasets.ts` (`loadSodYear`).
+
 ## Environment Variables
 
 See `.env.example`. Required:
@@ -67,9 +75,6 @@ Auth uses `DefaultAzureCredential` — run `az login` for local dev. The account
 - Arrow IPC output was removed — `FORMAT ARROW` is not available in duckdb-async 1.4.x
 
 ## Known Issues
-
-### SOD (Summary of Deposits) — fetch:sod
-The FDIC bulk ZIP URL (`banks.data.fdic.gov/bulk/fdic_bulk__Summary_Of_Deposits.zip`) returns 404 — the URL has moved. The new location needs to be tracked down. The SOD dataset is large (~hundreds of MB) so the API is not a viable alternative.
 
 ### FFIEC NIC datasets — fetch:nic-*
 The bulk-download URLs (e.g. `ffiec.gov/npw/FinancialReport/ReturnAttributesActiveZipFileCSV`) sit behind a Cloudflare bot challenge. We solve it with headless Playwright Chromium: a one-time visit to `/npw/FinancialReport/DataDownload` mints the `__cf_bm` cookie, then each ZIP is downloaded by opening a fresh page in the same browser context. See `src/lib/nic-downloader.ts`. The pipeline runs these best-effort — if Cloudflare tightens, the rest of the pipeline still completes.
@@ -106,7 +111,7 @@ After the first successful run uploads the parquet, remove `location_coordinates
 | locations | — | ✓ uploaded |
 | location_coordinates | — | ⏳ pending first run |
 | events | 581,970 | ✓ uploaded |
-| sod | — | ✗ broken URL |
+| sod | — | ✓ partitioned by year (1994→present) via FDIC API |
 | nic_attributes | 395,884 | ✓ parquet builds (upload pending) |
 | nic_relationships | 286,649 | ✓ parquet builds (upload pending) |
 | nic_transformations | 59,017 | ✓ parquet builds (upload pending) |
