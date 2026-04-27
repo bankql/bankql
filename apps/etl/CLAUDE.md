@@ -72,7 +72,9 @@ Auth uses `DefaultAzureCredential` — run `az login` for local dev. The account
 The FDIC bulk ZIP URL (`banks.data.fdic.gov/bulk/fdic_bulk__Summary_Of_Deposits.zip`) returns 404 — the URL has moved. The new location needs to be tracked down. The SOD dataset is large (~hundreds of MB) so the API is not a viable alternative.
 
 ### FFIEC NIC datasets — fetch:nic-*
-`ffiec.gov/nicpubweb/content/NICXMLDATA/` is behind a Cloudflare bot challenge and cannot be fetched programmatically. Workaround: download the 3 ZIPs manually from the FFIEC website and place them in `/tmp/etl/raw/` as `nic_attributes.csv`, `nic_relationships.csv`, `nic_transformations.csv` (after extracting), then run `npm run upload` directly.
+The bulk-download URLs (e.g. `ffiec.gov/npw/FinancialReport/ReturnAttributesActiveZipFileCSV`) sit behind a Cloudflare bot challenge. We solve it with headless Playwright Chromium: a one-time visit to `/npw/FinancialReport/DataDownload` mints the `__cf_bm` cookie, then each ZIP is downloaded by opening a fresh page in the same browser context. See `src/lib/nic-downloader.ts`. The pipeline runs these best-effort — if Cloudflare tightens, the rest of the pipeline still completes.
+
+Setup: after `npm install`, run `npx playwright install chromium` (~100MB) once per machine. The `nic_attributes` dataset unions three source CSVs (active institutions, closed institutions, branches) into one parquet via DuckDB's multi-file `read_csv`. NIC CSVs prefix the first header column with `#` (e.g. `#ID_RSSD_PARENT`); `stripHeaderHashPrefix` rewrites that in place after extraction.
 
 ### NCUA credit unions — fetch:ncua-credit-unions
 Pulls the quarterly Call Report ZIP from `ncua.gov/files/publications/analysis/call-report-data-YYYY-MM.zip` and extracts `FOICU.txt` (the roster). The URL is pinned to `2025-12` — bump the constant in `scripts/fetch-ncua-credit-unions.ts` as newer quarters drop (MM ∈ {03, 06, 09, 12}). Only the roster is ingested today; financial line items (`FS220*.txt`) and branch info live in the same ZIP and are follow-up work.
@@ -105,7 +107,7 @@ After the first successful run uploads the parquet, remove `location_coordinates
 | location_coordinates | — | ⏳ pending first run |
 | events | 581,970 | ✓ uploaded |
 | sod | — | ✗ broken URL |
-| nic_attributes | — | ✗ Cloudflare block |
-| nic_relationships | — | ✗ Cloudflare block |
-| nic_transformations | — | ✗ Cloudflare block |
+| nic_attributes | 395,884 | ✓ parquet builds (upload pending) |
+| nic_relationships | 286,649 | ✓ parquet builds (upload pending) |
+| nic_transformations | 59,017 | ✓ parquet builds (upload pending) |
 | credit_unions | 4,374 | ✓ parquet builds (upload pending) |
