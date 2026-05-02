@@ -10,6 +10,22 @@ const server = new McpServer({
   version: "0.1.0",
 });
 
+// The SDK's registerTool generic union (ZodRawShapeCompat | AnySchema)
+// triggers a "type instantiation excessively deep" error in tsc — and OOMs
+// the compiler when given enough schema variants. Cast through a simpler
+// signature; runtime is unaffected.
+type ToolConfig = {
+  description?: string;
+  inputSchema?: unknown;
+  outputSchema?: unknown;
+};
+type ToolHandler = (args: unknown, extra: unknown) => unknown;
+const registerTool = (
+  server as unknown as {
+    registerTool(name: string, config: ToolConfig, cb: ToolHandler): unknown;
+  }
+).registerTool.bind(server);
+
 const db = await openBankqlDuckDB();
 
 process.stderr.write(
@@ -21,16 +37,7 @@ if (db.skipped.length > 0) {
   }
 }
 
-const queryInput = z.object({
-  sql: z.string().describe("DuckDB SQL query. Read-only. Should be a SELECT."),
-});
-const queryOutput = z.object({
-  rows: z.array(z.record(z.string(), z.unknown())),
-  rowCount: z.number(),
-  truncated: z.boolean(),
-});
-
-server.registerTool(
+registerTool(
   "query_data",
   {
     description:
@@ -38,10 +45,17 @@ server.registerTool(
       "The query is wrapped in `SELECT * FROM (...) LIMIT 1001` to cap output. " +
       "Use `list_datasets` to see what tables are available and `describe_dataset` " +
       "to inspect columns before writing SQL.",
-    inputSchema: queryInput,
-    outputSchema: queryOutput,
+    inputSchema: z.object({
+      sql: z.string().describe("DuckDB SQL query. Read-only. Should be a SELECT."),
+    }),
+    outputSchema: z.object({
+      rows: z.array(z.record(z.string(), z.unknown())),
+      rowCount: z.number(),
+      truncated: z.boolean(),
+    }),
   },
-  async ({ sql }) => {
+  async (args) => {
+    const { sql } = args as { sql: string };
     const result = await runQuery(db.conn, sql);
     return {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
@@ -50,26 +64,23 @@ server.registerTool(
   },
 );
 
-const listInput = z.object({});
-const listOutput = z.object({
-  datasets: z.array(
-    z.object({
-      name: z.string(),
-      description: z.string().optional(),
-      registered: z.boolean(),
-      skipReason: z.string().optional(),
-    }),
-  ),
-});
-
-server.registerTool(
+registerTool(
   "list_datasets",
   {
     description:
       "List the datasets available for querying, including the registration " +
       "status (registered datasets are queryable; skipped ones are not yet published).",
-    inputSchema: listInput,
-    outputSchema: listOutput,
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      datasets: z.array(
+        z.object({
+          name: z.string(),
+          description: z.string().optional(),
+          registered: z.boolean(),
+          skipReason: z.string().optional(),
+        }),
+      ),
+    }),
   },
   async () => {
     const skippedMap = new Map(db.skipped.map((s) => [s.name, s.reason]));
@@ -87,28 +98,26 @@ server.registerTool(
   },
 );
 
-const describeInput = z.object({
-  name: z
-    .string()
-    .describe("Dataset name (e.g. 'institutions', 'sod', 'nic_attributes')."),
-});
-const describeOutput = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  fields: z.array(z.record(z.string(), z.unknown())),
-  relations: z.array(z.record(z.string(), z.unknown())),
-});
-
-server.registerTool(
+registerTool(
   "describe_dataset",
   {
     description:
       "Return rich column metadata for a dataset: types, descriptions, units, " +
       "enum values, and foreign-key relations. Use before writing SQL.",
-    inputSchema: describeInput,
-    outputSchema: describeOutput,
+    inputSchema: z.object({
+      name: z
+        .string()
+        .describe("Dataset name (e.g. 'institutions', 'sod', 'nic_attributes')."),
+    }),
+    outputSchema: z.object({
+      name: z.string(),
+      description: z.string().optional(),
+      fields: z.array(z.record(z.string(), z.unknown())),
+      relations: z.array(z.record(z.string(), z.unknown())),
+    }),
   },
-  async ({ name }) => {
+  async (args) => {
+    const { name } = args as { name: string };
     const dataset = allDatasets.find((d) => d.name === name);
     if (!dataset) {
       const known = allDatasets.map((d) => d.name).join(", ");
