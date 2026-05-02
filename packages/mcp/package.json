@@ -1,0 +1,29 @@
+{
+  "name": "@bankql/mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for the bankql FDIC/NIC datasets — runs read-only DuckDB queries against parquets in Azure Blob Storage.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "bankql-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bankql/schema": "*",
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "duckdb-async": "^1.4.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}
